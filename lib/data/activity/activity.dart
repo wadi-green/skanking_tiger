@@ -24,7 +24,7 @@ class Activity extends BaseActivity {
   // The amount of karma points you gain by doing this activity
   final int karma;
   // the target group for which this activity is intended for
-  final ActivityAudience audience;
+  // final ActivityAudience audience;
   // the current revision number
   final int revision;
 
@@ -43,7 +43,7 @@ class Activity extends BaseActivity {
     @required this.active,
     @required this.karma,
     @required String imageUrl,
-    @required this.audience,
+    // @required this.audience,
     @required this.revision,
     @required this.totalSteps,
   }) : super(
@@ -79,8 +79,8 @@ class Activity extends BaseActivity {
         active: json['active'] as bool,
         karma: json['karma'] as int,
         imageUrl: json['imageUrl'] as String,
-        audience:
-            ActivityAudience.fromJson(json['audience'] as Map<String, dynamic>),
+        // audience:
+        //     ActivityAudience.fromJson(json['audience'] as Map<String, dynamic>),
         revision: json['revision'] as int,
         totalSteps: json['totalSteps'] as int,
       );
