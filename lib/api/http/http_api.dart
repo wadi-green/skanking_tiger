@@ -101,7 +101,7 @@ class HttpApi implements Api {
   Future<SearchResults> searchActivities({String keyword, int limit}) async {
     // Search results are cached for improved user experience
     final response = await cachedClient().get(
-      'search',
+      '/public/api/v1/search',
       queryParameters: {
         if (keyword != null) 'keyword': keyword,
         if (limit != null) 'limit': limit,
@@ -109,6 +109,7 @@ class HttpApi implements Api {
       options: buildCacheOptions(const Duration(hours: 1)),
     );
     try {
+      print('response : $response');
       checkErrors(response);
       return SearchResults.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
@@ -119,7 +120,7 @@ class HttpApi implements Api {
   @override
   Future<List<Activity>> fetchActivities({String sortedBy, int limit}) async {
     final response = await basicClient().get(
-      'activities',
+      '/public/api/v1/activities',
       queryParameters: {
         if (sortedBy != null) 'sortedBy': sortedBy,
         if (limit != null) 'limit': limit,
@@ -149,7 +150,8 @@ class HttpApi implements Api {
 
   @override
   Future<List<PlanterActivity>> fetchPlanterActivities(String planterId) async {
-    final response = await basicClient().get('planters/$planterId/activities');
+    final response = await basicClient()
+        .get('/public/api/v1/planters/$planterId/activities');
     try {
       checkErrors(response);
       final activities = (response.data as List)
@@ -194,7 +196,7 @@ class HttpApi implements Api {
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
       String planterId, int month, int year) async {
     final response = await cachedClient().get(
-      'planters/$planterId/checkins',
+      '/public/api/v1/planters/$planterId/checkins',
       queryParameters: {'date': '$month/$year'},
       options: buildCacheOptions(const Duration(minutes: 30)),
     );
@@ -211,7 +213,8 @@ class HttpApi implements Api {
 
   @override
   Future<List<PlanterFriend>> fetchPlanterFriends(String planterId) async {
-    final response = await basicClient().get('planters/$planterId/friends');
+    final response =
+        await basicClient().get('/public/api/v1/planters/$planterId/friends');
     try {
       checkErrors(response);
       final friends = (response.data as List)
