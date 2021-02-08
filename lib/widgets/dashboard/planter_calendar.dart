@@ -46,7 +46,7 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
   void _updateEvents(int month, int year) {
     _future = context
         .read<Api>()
-        .fetchPlanterCheckIns(widget.planter.id, month, year);
+        .fetchPlanterCheckIns(widget.planter.id, month, year, '');
     _future.then((events) {
       setState(() {
         _selectedMonthEvents

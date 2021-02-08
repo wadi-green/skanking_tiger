@@ -12,7 +12,7 @@ BaseOptions _requestOptions([String token]) {
     baseUrl: AppConfig.baseUrl,
     connectTimeout: 5000, // in milliseconds, so = 5 seconds
     receiveTimeout: 20000, // when downloading for example, also in milliseconds
-    headers: token == null ? null : {'Authorization': 'Bearer $token'},
+    headers: token == null ? null : {'API_KEY': token}, // the api-key authentication is done on server side
     // Always check the response even if it's a 500 error
     validateStatus: (status) => true,
   );

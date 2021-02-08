@@ -25,7 +25,7 @@ abstract class Api {
   Future<List<PlanterActivity>> fetchPlanterActivities(String planterId);
   Future<PlanterActivity> fetchPlanterActivity(String planterId, String activityId);
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId);
-  Future<List<PlanterCheckIn>> fetchPlanterCheckIns(String planterId, int month, int year);
+  Future<List<PlanterCheckIn>> fetchPlanterCheckIns(String planterId, int month, int year, String token);
   Future<PlanterCheckIn> logPlanterCheckIn(String planterId, PlanterCheckIn checkIn);
   Future<List<PlanterNotification>> fetchPlanterNotifications(String planterId);
 

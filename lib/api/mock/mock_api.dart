@@ -114,7 +114,7 @@ class MockApi implements Api {
 
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
-      String planterId, int month, int year) async {
+      String planterId, int month, int year, String token) async {
     await Future.delayed(loadingDuration);
     return dummyPlanterCheckIns
         .where((e) {

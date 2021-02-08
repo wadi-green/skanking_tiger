@@ -76,7 +76,7 @@ class HttpApi implements Api {
 
   @override
   Future<Planter> fetchPlanter(String planterId) async {
-    final response = await basicClient().get('planters/$planterId');
+    final response = await basicClient().get('/public/api/v1/planters/$planterId');
     try {
       checkErrors(response);
       return Planter.fromJson(response.data as Map<String, dynamic>);
@@ -109,7 +109,6 @@ class HttpApi implements Api {
       options: buildCacheOptions(const Duration(hours: 1)),
     );
     try {
-      print('response : $response');
       checkErrors(response);
       return SearchResults.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
@@ -194,9 +193,10 @@ class HttpApi implements Api {
 
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
-      String planterId, int month, int year) async {
-    final response = await cachedClient().get(
-      '/public/api/v1/planters/$planterId/checkins',
+      String planterId, int month, int year, String token) async {
+        // todo somehow get this token here for the call
+    final response = await authenticatedClient(token).get(
+      '/secured/api/v1/planters/$planterId/checkins',
       queryParameters: {'date': '$month/$year'},
       options: buildCacheOptions(const Duration(minutes: 30)),
     );
@@ -268,7 +268,7 @@ class HttpApi implements Api {
   @override
   Future<LoginResponse> login(String username, String password) async {
     final response = await basicClient().post(
-      'login',
+      '/public/api/v1/planters/management/login',
       data: {'userName': username, 'password': password},
     );
     try {
