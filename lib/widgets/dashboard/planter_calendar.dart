@@ -16,13 +16,16 @@ import '../custom_card.dart';
 class PlanterCalendar extends StatefulWidget {
   final String title;
   final Planter planter;
+  final String accessToken;
 
   const PlanterCalendar({
     Key key,
     @required this.planter,
     @required this.title,
+    @required this.accessToken,
   })  : assert(planter != null),
         assert(title != null),
+        assert(accessToken != null),
         super(key: key);
 
   @override
@@ -46,7 +49,7 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
   void _updateEvents(int month, int year) {
     _future = context
         .read<Api>()
-        .fetchPlanterCheckIns(widget.planter.id, month, year, '');
+        .fetchPlanterCheckIns(widget.planter.id, month, year, widget.accessToken);
     _future.then((events) {
       setState(() {
         _selectedMonthEvents

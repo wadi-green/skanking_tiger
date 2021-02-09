@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:wadi_green/data/login_response.dart';
 
 import '../core/constants.dart';
 import '../core/text_styles.dart';
@@ -27,6 +28,9 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokenData = context.select<AuthModel, LoginResponse>(
+      (response) => response.tokenData,
+    );
     return WadiScaffold(
       hasDrawer: isMain,
       body: Selector<AuthModel, Planter>(
@@ -55,7 +59,7 @@ class DashboardScreen extends StatelessWidget {
                   cardsSpacer,
                   MyActivitiesList(planterId: user.id),
                   cardsSpacer,
-                  PlanterCalendar(planter: user, title: Strings.myCalendar),
+                  PlanterCalendar(planter: user, title: Strings.myCalendar, accessToken: tokenData.accessToken),
                   cardsSpacer,
                   ActivityCategories(
                     title: Strings.activityCategories,

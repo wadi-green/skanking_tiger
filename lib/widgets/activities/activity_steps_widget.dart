@@ -46,7 +46,7 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
 
   Future<void> _checkActivityStatus() async {
     final currentPlanter = context.read<AuthModel>().user;
-    if (currentPlanter == null) {
+    if (currentPlanter == null || !currentPlanter.activities.contains(widget.activity.id)) {
       // Do nothing for guest users
       return;
     }

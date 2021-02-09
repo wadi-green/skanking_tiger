@@ -56,7 +56,7 @@ class HttpApi implements Api {
   Future<List<Planter>> fetchPlanters(
       {String sortedBy, int limit, List<String> ids}) async {
     final response = await basicClient().get(
-      'planters',
+      '/public/api/v1/planters',
       queryParameters: {
         if (sortedBy != null) 'sortedBy': sortedBy,
         if (limit != null) 'limit': limit,
@@ -88,7 +88,8 @@ class HttpApi implements Api {
   @override
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId) async {
     final response =
-        await basicClient().get('planters/$planterId/planterCanvas');
+        await basicClient().get(
+          '/public/api/v1/planters/$planterId/planterCanvas');
     try {
       checkErrors(response);
       return PlanterCanvas.fromJson(response.data as Map<String, dynamic>);
@@ -138,7 +139,7 @@ class HttpApi implements Api {
 
   @override
   Future<Activity> fetchActivity(String activityId) async {
-    final response = await basicClient().get('activities/$activityId');
+    final response = await basicClient().get('/public/api/v1/activities/$activityId');
     try {
       checkErrors(response);
       return Activity.fromJson(response.data as Map<String, dynamic>);
@@ -166,7 +167,7 @@ class HttpApi implements Api {
   Future<PlanterActivity> fetchPlanterActivity(
       String planterId, String activityId) async {
     final response = await basicClient().get(
-      'planters/$planterId/activities/$activityId',
+      '/secured/api/v1/planters/$planterId/activities/$activityId',
     );
     try {
       checkErrors(response);
