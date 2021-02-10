@@ -28,9 +28,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokenData = context.select<AuthModel, LoginResponse>(
-      (response) => response.tokenData,
-    );
     return WadiScaffold(
       hasDrawer: isMain,
       body: Selector<AuthModel, Planter>(
@@ -59,7 +56,7 @@ class DashboardScreen extends StatelessWidget {
                   cardsSpacer,
                   MyActivitiesList(planterId: user.id),
                   cardsSpacer,
-                  PlanterCalendar(planter: user, title: Strings.myCalendar, accessToken: tokenData.accessToken),
+                  PlanterCalendar(planter: user, title: Strings.myCalendar),
                   cardsSpacer,
                   ActivityCategories(
                     title: Strings.activityCategories,

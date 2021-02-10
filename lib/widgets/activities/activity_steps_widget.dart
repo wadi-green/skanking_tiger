@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wadi_green/data/login_response.dart';
 
 import '../../api/api.dart';
 import '../../api/api_exceptions.dart';
@@ -46,15 +47,17 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
 
   Future<void> _checkActivityStatus() async {
     final currentPlanter = context.read<AuthModel>().user;
+    final tokenData = context.read<AuthModel>().tokenData;
     if (currentPlanter == null || !currentPlanter.activities.contains(widget.activity.id)) {
       // Do nothing for guest users
+      print('doing nothing ----- loading empty');
       return;
     }
     setState(() => _isLoading = true);
     try {
       final result = await context
           .read<Api>()
-          .fetchPlanterActivity(currentPlanter.id, widget.activity.id);
+          .fetchPlanterActivity(currentPlanter.id, widget.activity.id, tokenData.accessToken);
       _planterActivity = result;
     } catch (e) {
       if (e is ApiException && e.code == 404) {
@@ -195,6 +198,7 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
               comment: _commentController.text,
               timestamp: DateTime.now().toIso8601String(),
             ),
+            context.read<AuthModel>().tokenData.accessToken,
           );
       _commentController.clear();
       setState(() {

@@ -165,8 +165,8 @@ class HttpApi implements Api {
 
   @override
   Future<PlanterActivity> fetchPlanterActivity(
-      String planterId, String activityId) async {
-    final response = await basicClient().get(
+      String planterId, String activityId, String token) async {
+    final response = await authenticatedClient(token).get(
       '/secured/api/v1/planters/$planterId/activities/$activityId',
     );
     try {
@@ -229,9 +229,9 @@ class HttpApi implements Api {
 
   @override
   Future<PlanterCheckIn> logPlanterCheckIn(
-      String planterId, PlanterCheckIn checkIn) async {
-    final response = await basicClient().post(
-      'planters/$planterId/checkins',
+      String planterId, PlanterCheckIn checkIn, String token) async {
+    final response = await authenticatedClient(token).post(
+      '/secured/api/v1/planters/$planterId/checkins',
       data: checkIn.toJson(),
     );
     try {

@@ -23,10 +23,10 @@ abstract class Api {
   Future<Planter> fetchPlanter(String planterId);
   Future<List<PlanterFriend>> fetchPlanterFriends(String planterId);
   Future<List<PlanterActivity>> fetchPlanterActivities(String planterId);
-  Future<PlanterActivity> fetchPlanterActivity(String planterId, String activityId);
+  Future<PlanterActivity> fetchPlanterActivity(String planterId, String activityId, String token);
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId);
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(String planterId, int month, int year, String token);
-  Future<PlanterCheckIn> logPlanterCheckIn(String planterId, PlanterCheckIn checkIn);
+  Future<PlanterCheckIn> logPlanterCheckIn(String planterId, PlanterCheckIn checkIn, String token);
   Future<List<PlanterNotification>> fetchPlanterNotifications(String planterId);
 
   /// Search Requests

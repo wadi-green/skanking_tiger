@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:wadi_green/models/auth_model.dart';
 
 import '../../api/api.dart';
 import '../../core/colors.dart';
@@ -16,16 +17,13 @@ import '../custom_card.dart';
 class PlanterCalendar extends StatefulWidget {
   final String title;
   final Planter planter;
-  final String accessToken;
 
   const PlanterCalendar({
     Key key,
     @required this.planter,
     @required this.title,
-    @required this.accessToken,
   })  : assert(planter != null),
         assert(title != null),
-        assert(accessToken != null),
         super(key: key);
 
   @override
@@ -47,9 +45,10 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
   }
 
   void _updateEvents(int month, int year) {
+    final tokenData = context.read<AuthModel>().tokenData;
     _future = context
         .read<Api>()
-        .fetchPlanterCheckIns(widget.planter.id, month, year, widget.accessToken);
+        .fetchPlanterCheckIns(widget.planter.id, month, year, tokenData.accessToken);
     _future.then((events) {
       setState(() {
         _selectedMonthEvents

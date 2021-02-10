@@ -28,7 +28,7 @@ class Planter extends Equatable {
   final String picture;
   final int totalPlants;
   final List<ActivityCategory> mostActiveCategories;
-  final List<int> activities;
+  final List<String> activities;
 
   const Planter({
     @required this.id,
@@ -74,7 +74,7 @@ class Planter extends Equatable {
         mostActiveCategories: (json['categories'] as List ?? [])
             .map((e) => ActivityCategory.fromJson(e as Map<String, dynamic>))
             .toList(),
-        activities: (json['activities'] as List ?? []).map<int>((m) => m as int).toList()
+        activities: (json['activities'] as List ?? []).map<String>((m) => m as String).toList()
       );
 
   Planter copyWith({
@@ -94,6 +94,7 @@ class Planter extends Equatable {
     String picture,
     int totalPlants,
     List<ActivityCategory> mostActiveCategories,
+    List<String> activities,
   }) =>
       Planter(
         id: id ?? this.id,
@@ -112,6 +113,7 @@ class Planter extends Equatable {
         picture: picture ?? this.picture,
         totalPlants: totalPlants ?? this.totalPlants,
         mostActiveCategories: mostActiveCategories ?? this.mostActiveCategories,
+        activities: activities ?? this.activities,
       );
 
   Map<String, dynamic> toJson() => {
