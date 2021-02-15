@@ -21,13 +21,14 @@ abstract class Api {
   /// Planters Requests
   Future<List<Planter>> fetchPlanters({String sortedBy, int limit, List<String> ids});
   Future<Planter> fetchPlanter(String planterId);
+  Future<Planter> updatePlanter(String planterId, Planter planter, String token);
   Future<List<PlanterFriend>> fetchPlanterFriends(String planterId);
   Future<List<PlanterActivity>> fetchPlanterActivities(String planterId);
   Future<PlanterActivity> fetchPlanterActivity(String planterId, String activityId, String token);
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId);
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(String planterId, int month, int year, String token);
   Future<PlanterCheckIn> logPlanterCheckIn(String planterId, PlanterCheckIn checkIn, String token);
-  Future<List<PlanterNotification>> fetchPlanterNotifications(String planterId);
+  Future<List<PlanterNotification>> fetchPlanterNotifications(String planterId, String token);
 
   /// Search Requests
   Future<SearchResults> searchActivities({String keyword, int limit});

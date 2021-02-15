@@ -50,7 +50,6 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
     final tokenData = context.read<AuthModel>().tokenData;
     if (currentPlanter == null || !currentPlanter.activities.contains(widget.activity.id)) {
       // Do nothing for guest users
-      print('doing nothing ----- loading empty');
       return;
     }
     setState(() => _isLoading = true);

@@ -104,7 +104,7 @@ class HttpApi implements Api {
     final response = await cachedClient().get(
       '/public/api/v1/search',
       queryParameters: {
-        if (keyword != null) 'keyword': keyword,
+        if (keyword != null) 'q': keyword,
         if (limit != null) 'limit': limit,
       },
       options: buildCacheOptions(const Duration(hours: 1)),
@@ -179,9 +179,10 @@ class HttpApi implements Api {
 
   @override
   Future<List<PlanterNotification>> fetchPlanterNotifications(
-      String planterId) async {
-    final response =
-        await basicClient().get('planters/$planterId/notifications');
+      String planterId, String token) async {
+    final response = await authenticatedClient(token).get(
+          '/secured/api/v1/planters/$planterId/notifications'
+    );
     try {
       checkErrors(response);
       return (response.data as List)
@@ -242,10 +243,26 @@ class HttpApi implements Api {
     }
   }
 
+  
+  @override
+  Future<Planter> updatePlanter(
+      String planterId, Planter planter, String token) async {
+    final response = await authenticatedClient(token).put(
+      '/secured/api/v1/planters/$planterId',
+      data: planter.toJson(),
+    );
+    try {
+      checkErrors(response);
+      return Planter.fromJson(response.data as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Future<String> inviteFriend(String email, String name, String comment) async {
     final response = await basicClient().post(
-      'invite',
+      '/public/api/v1/planters/management/invite',
       data: {
         'email': email,
         'name': name,

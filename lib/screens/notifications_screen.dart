@@ -22,13 +22,15 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   String planterId;
+  String token;
   Future<List<PlanterNotification>> _notifications;
 
   @override
   void initState() {
     super.initState();
     planterId = context.read<AuthModel>().user.id;
-    _notifications = context.read<Api>().fetchPlanterNotifications(planterId);
+    token = context.read<AuthModel>().tokenData.accessToken;
+    _notifications = context.read<Api>().fetchPlanterNotifications(planterId, token);
   }
 
   @override
@@ -49,7 +51,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   setState(() {
                     _notifications = context
                         .read<Api>()
-                        .fetchPlanterNotifications(planterId);
+                        .fetchPlanterNotifications(planterId, token);
                   });
                 },
               ),

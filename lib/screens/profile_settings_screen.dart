@@ -285,6 +285,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         // TODO api call
         final updatedUser = _user.copyWith(aboutMe: _aboutController.text);
         context.read<AuthModel>().updateUser(updatedUser);
+        await context.read<Api>().updatePlanter(
+            context.read<AuthModel>().user.id,
+            updatedUser,
+            context.read<AuthModel>().tokenData.accessToken,
+          );
         _user = updatedUser;
         resetFields();
         Scaffold.of(context)
