@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../data/route_arguments.dart';
 import '../screens/activity_details_screen.dart';
+import '../screens/all_activities_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/invitation_form_screen.dart';
 import '../screens/landing_screen.dart';
@@ -64,6 +65,11 @@ Widget _resolveDestination(String routeName, RouteArguments args) {
       return MostActivePlantersScreen(isMain: args.isMain);
     case MostLikedActivitiesScreen.route:
       return MostLikedActivitiesScreen(isMain: args.isMain);
+    case AllActivitiesScreen.route:
+      return AllActivitiesScreen(
+        isMain: args.isMain,
+        query: args.data[SearchScreen.queryArg] as String,
+      );
     case NotificationsScreen.route:
       return const NotificationsScreen();
     case PersonalPlantScreen.route:

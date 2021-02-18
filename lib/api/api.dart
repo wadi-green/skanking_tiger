@@ -34,7 +34,7 @@ abstract class Api {
   Future<SearchResults> searchActivities({String keyword, int limit});
 
   /// Activities Requests
-  Future<List<Activity>> fetchActivities({String sortedBy, int limit});
+  Future<List<Activity>> fetchActivities({String sortedBy, int limit, String keyword});
   Future<Activity> fetchActivity(String activityId);
 
   /// Membership

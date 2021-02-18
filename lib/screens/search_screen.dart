@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../api/api.dart';
 import '../core/constants.dart';
+import '../data/route_arguments.dart';
 import '../data/search_results.dart';
+import '../screens/all_activities_screen.dart';
 import '../utils/strings.dart';
 import '../widgets/activities/compact_activities_list.dart';
 import '../widgets/activity_categories.dart';
@@ -57,8 +60,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   // to the api
                   setState(() {
                     _query = query;
-                    _future = _future =
-                        context.read<Api>().searchActivities(keyword: query);
+                    _future = _future = context
+                        .read<Api>()
+                        .searchActivities(keyword: query, limit: 10);
                   });
                 },
               ),
@@ -86,7 +90,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                 if (snapshot.hasData) {
                   return SliverToBoxAdapter(
-                    child: buildResults(snapshot.data),
+                    child: buildResults(snapshot.data, _query),
                   );
                 }
 
@@ -118,11 +122,14 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Center(child: Text(error ?? Strings.searchError)),
       );
 
-  Widget buildResults(SearchResults results) => Column(
+  Widget buildResults(SearchResults results, String q) => Column(
         children: [
           CompactActivitiesList(
             title: Strings.activitiesList,
             activities: results.results,
+            callback: () => Navigator.of(context).pushNamed(
+                AllActivitiesScreen.route,
+                arguments: RouteArguments(data: {SearchScreen.queryArg: q})),
           ),
           cardsSpacer,
           HashtagsWidget(

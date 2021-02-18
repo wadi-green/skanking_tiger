@@ -76,7 +76,8 @@ class HttpApi implements Api {
 
   @override
   Future<Planter> fetchPlanter(String planterId) async {
-    final response = await basicClient().get('/public/api/v1/planters/$planterId');
+    final response =
+        await basicClient().get('/public/api/v1/planters/$planterId');
     try {
       checkErrors(response);
       return Planter.fromJson(response.data as Map<String, dynamic>);
@@ -87,9 +88,8 @@ class HttpApi implements Api {
 
   @override
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId) async {
-    final response =
-        await basicClient().get(
-          '/public/api/v1/planters/$planterId/planterCanvas');
+    final response = await basicClient()
+        .get('/public/api/v1/planters/$planterId/planterCanvas');
     try {
       checkErrors(response);
       return PlanterCanvas.fromJson(response.data as Map<String, dynamic>);
@@ -104,7 +104,7 @@ class HttpApi implements Api {
     final response = await cachedClient().get(
       '/public/api/v1/search',
       queryParameters: {
-        if (keyword != null) 'q': keyword,
+        if (keyword != null) 'query': keyword,
         if (limit != null) 'limit': limit,
       },
       options: buildCacheOptions(const Duration(hours: 1)),
@@ -118,12 +118,14 @@ class HttpApi implements Api {
   }
 
   @override
-  Future<List<Activity>> fetchActivities({String sortedBy, int limit}) async {
+  Future<List<Activity>> fetchActivities(
+      {String sortedBy, int limit, String keyword}) async {
     final response = await basicClient().get(
       '/public/api/v1/activities',
       queryParameters: {
         if (sortedBy != null) 'sortedBy': sortedBy,
         if (limit != null) 'limit': limit,
+        if (keyword != null) 'keyword': keyword,
       },
     );
     try {
@@ -139,7 +141,8 @@ class HttpApi implements Api {
 
   @override
   Future<Activity> fetchActivity(String activityId) async {
-    final response = await basicClient().get('/public/api/v1/activities/$activityId');
+    final response =
+        await basicClient().get('/public/api/v1/activities/$activityId');
     try {
       checkErrors(response);
       return Activity.fromJson(response.data as Map<String, dynamic>);
@@ -180,9 +183,8 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterNotification>> fetchPlanterNotifications(
       String planterId, String token) async {
-    final response = await authenticatedClient(token).get(
-          '/secured/api/v1/planters/$planterId/notifications'
-    );
+    final response = await authenticatedClient(token)
+        .get('/secured/api/v1/planters/$planterId/notifications');
     try {
       checkErrors(response);
       return (response.data as List)
@@ -196,7 +198,7 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
       String planterId, int month, int year, String token) async {
-        // todo somehow get this token here for the call
+    // todo somehow get this token here for the call
     final response = await authenticatedClient(token).get(
       '/secured/api/v1/planters/$planterId/checkins',
       queryParameters: {'date': '$month/$year'},
@@ -243,7 +245,6 @@ class HttpApi implements Api {
     }
   }
 
-  
   @override
   Future<Planter> updatePlanter(
       String planterId, Planter planter, String token) async {

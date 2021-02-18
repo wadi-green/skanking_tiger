@@ -7,10 +7,11 @@ import '../utils/strings.dart';
 import '../widgets/activities/detailed_activities_list.dart';
 import '../widgets/wadi_scaffold.dart';
 
-class MostLikedActivitiesScreen extends StatelessWidget {
-  static const route = '/most-liked-activities';
+class AllActivitiesScreen extends StatelessWidget {
+  static const route = '/all-activities';
   final bool isMain;
-  const MostLikedActivitiesScreen({Key key, this.isMain = false})
+  final String query;
+  const AllActivitiesScreen({Key key, this.isMain = false, this.query})
       : super(key: key);
 
   @override
@@ -24,9 +25,9 @@ class MostLikedActivitiesScreen extends StatelessWidget {
             child: Padding(
               padding: hEdgeInsets,
               child: DetailedActivitiesList(
-                title: Strings.mostLikedActivities,
+                title: Strings.allActivities,
                 fetchActivitiesCallback: () {
-                  return context.read<Api>().fetchActivities(sortedBy: 'likes', limit: 150);
+                  return context.read<Api>().fetchActivities(sortedBy: 'likes', limit: 150, keyword: query);
                 },
               ),
             ),

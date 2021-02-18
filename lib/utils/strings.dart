@@ -38,6 +38,7 @@ class Strings {
 
   /// Landing
   static const mostLikedActivities = 'Most liked activities';
+  static const allActivities = 'All activities';
   static const mostActivePlanters = 'Most active planters';
   static const howItWorks = 'How it works';
   static const startGrowingYourPlants = 'Start growing your plants now!';
