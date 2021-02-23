@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../api/api.dart';
 import '../core/constants.dart';
+import '../data/bug.dart';
 import '../utils/strings.dart';
 import '../utils/validators.dart';
 import 'auth/auth_button.dart';
@@ -93,8 +96,10 @@ class _BugReportFormState extends State<BugReportForm> {
     if (_formKey.currentState.validate()) {
       setState(() => _isLoading = true);
       try {
-        await Future.delayed(const Duration(seconds: 2));
-        // TODO api call
+        await context.read<Api>().fileBug(Bug(
+            id: '$_titleController.text.hashCode)',
+            title: _titleController.text,
+            description: _detailsController.text));
         _clearFields();
         showDialog(
           context: context,

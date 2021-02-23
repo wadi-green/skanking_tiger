@@ -2,6 +2,7 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 
 import '../../data/activity/activity.dart';
 import '../../data/activity/planter_activity.dart';
+import '../../data/bug.dart';
 import '../../data/chat.dart';
 import '../../data/login_response.dart';
 import '../../data/message.dart';
@@ -238,6 +239,17 @@ class HttpApi implements Api {
     try {
       checkErrors(response);
       return Activity.fromJson(response.data as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Bug> fileBug(Bug bug) async {
+    final response = await basicClient().post('/public/api/v1/feedback/report');
+    try {
+      checkErrors(response);
+      return Bug.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
       rethrow;
     }

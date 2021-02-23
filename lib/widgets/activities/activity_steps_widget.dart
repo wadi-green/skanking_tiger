@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wadi_green/data/login_response.dart';
 
 import '../../api/api.dart';
 import '../../api/api_exceptions.dart';

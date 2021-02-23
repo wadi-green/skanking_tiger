@@ -282,7 +282,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       setState(() => _isLoading = true);
       try {
         await Future.delayed(const Duration(seconds: 2));
-        // TODO api call
         final updatedUser = _user.copyWith(aboutMe: _aboutController.text);
         context.read<AuthModel>().updateUser(updatedUser);
         await context.read<Api>().updatePlanter(

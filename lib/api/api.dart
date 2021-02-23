@@ -1,5 +1,6 @@
 import '../data/activity/activity.dart';
 import '../data/activity/planter_activity.dart';
+import '../data/bug.dart';
 import '../data/chat.dart';
 import '../data/login_response.dart';
 import '../data/message.dart';
@@ -47,4 +48,7 @@ abstract class Api {
   Future<List<Chat>> fetchAllGroups(String planterId);
   Future<List<Message>> fetchGroupMessages(String planterId, String messageGroupId);
   Future<Message> sendMessageToGroup(Message message, String planterId, String messageGroupId);
+
+  /// bug reporting
+  Future<Bug> fileBug(Bug bug);
 }

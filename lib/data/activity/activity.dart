@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../activity_audience.dart';
 import '../activity_benefit.dart';
 import '../activity_category.dart';
 import '../activity_step.dart';
