@@ -50,5 +50,5 @@ abstract class Api {
   Future<Message> sendMessageToGroup(Message message, String planterId, String messageGroupId);
 
   /// bug reporting
-  Future<Bug> fileBug(Bug bug);
+  Future<void> fileBug(Bug bug);
 }

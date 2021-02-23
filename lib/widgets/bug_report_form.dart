@@ -97,7 +97,6 @@ class _BugReportFormState extends State<BugReportForm> {
       setState(() => _isLoading = true);
       try {
         await context.read<Api>().fileBug(Bug(
-            id: '$_titleController.text.hashCode)',
             title: _titleController.text,
             description: _detailsController.text));
         _clearFields();

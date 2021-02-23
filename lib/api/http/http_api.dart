@@ -199,7 +199,6 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
       String planterId, int month, int year, String token) async {
-    // todo somehow get this token here for the call
     final response = await authenticatedClient(token).get(
       '/secured/api/v1/planters/$planterId/checkins',
       queryParameters: {'date': '$month/$year'},
@@ -245,11 +244,11 @@ class HttpApi implements Api {
   }
 
   @override
-  Future<Bug> fileBug(Bug bug) async {
-    final response = await basicClient().post('/public/api/v1/feedback/report');
+  Future<void> fileBug(Bug bug) async {
+    final response = await basicClient()
+        .post('/public/api/v1/feedback/report', data: bug.toJson());
     try {
       checkErrors(response);
-      return Bug.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
       rethrow;
     }
