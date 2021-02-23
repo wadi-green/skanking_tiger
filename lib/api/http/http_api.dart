@@ -231,6 +231,19 @@ class HttpApi implements Api {
   }
 
   @override
+  Future<Activity> likeActivity(
+      String planterId, String activityId, String token) async {
+    final response = await authenticatedClient(token).post(
+        '/secured/api/v1/planters/$planterId/activities/$activityId/like');
+    try {
+      checkErrors(response);
+      return Activity.fromJson(response.data as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<PlanterCheckIn> logPlanterCheckIn(
       String planterId, PlanterCheckIn checkIn, String token) async {
     final response = await authenticatedClient(token).post(

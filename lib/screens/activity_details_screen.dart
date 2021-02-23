@@ -4,11 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../api/api.dart';
 import '../core/colors.dart';
 import '../core/constants.dart';
 import '../core/images.dart';
 import '../core/text_styles.dart';
 import '../data/activity/activity.dart';
+import '../data/checkin_activity_type.dart';
+import '../data/planter_checkin.dart';
 import '../data/route_arguments.dart';
 import '../models/auth_model.dart';
 import '../utils/strings.dart';
@@ -136,9 +139,23 @@ class _ActivityDetails extends StatelessWidget {
                   WadiGreenIcons.addActivity,
                   color: MainColors.darkGrey,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (context.read<AuthModel>().isLoggedIn) {
-                    // TODO
+                    await context.read<Api>().logPlanterCheckIn(
+                          context.read<AuthModel>().user.id,
+                          PlanterCheckIn(
+                            activityId: activity.id,
+                            activityTitle: activity.title,
+                            activityStep: -1,
+                            checkinType: const CheckInActivityType(
+                                CheckInActivityType.newActivityStarted),
+                            comment: '${activity.id} started',
+                            timestamp: DateTime.now().toIso8601String(),
+                          ),
+                          context.read<AuthModel>().tokenData.accessToken,
+                        );
+                    // update context user with the new activity ID
+                    context.read<AuthModel>().user.activities.add(activity.id);
                   } else {
                     Navigator.pushNamed(context, LogInScreen.route);
                   }
@@ -168,9 +185,13 @@ class _ActivityDetails extends StatelessWidget {
                   ),
                 ),
                 alignment: Alignment.topCenter,
-                onPressed: () {
+                onPressed: () async {
                   if (context.read<AuthModel>().isLoggedIn) {
-                    // TODO
+                    await context.read<Api>().likeActivity(
+                          context.read<AuthModel>().user.id,
+                          activity.id,
+                          context.read<AuthModel>().tokenData.accessToken,
+                        );
                   } else {
                     Navigator.pushNamed(context, LogInScreen.route);
                   }

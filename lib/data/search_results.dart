@@ -11,8 +11,10 @@ class SearchResults extends Equatable {
   final SearchResultHashtags hashtags;
   final List<ActivityCategory> categories;
   final List<SearchResultActivity> mostLikedActivities;
+  final int totalResults;
 
   const SearchResults({
+    @required this.totalResults,
     @required this.results,
     @required this.hashtags,
     @required this.categories,
@@ -20,6 +22,7 @@ class SearchResults extends Equatable {
   });
 
   factory SearchResults.fromJson(Map<String, dynamic> json) => SearchResults(
+        totalResults: json['totalResults'] as int ?? 0,
         results: (json['results'] as List ?? [])
             .map((e) => SearchResultActivity.fromJson(
                   e as Map<String, dynamic>,

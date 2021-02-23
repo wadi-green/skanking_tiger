@@ -24,7 +24,7 @@ class PlanterNotification extends Equatable {
         title: json['title'] as String,
         message: json['message'] as String,
         time: json['time'] as String,
-        icon: json['icon'] as String,
+        icon: 'like',
       );
 
   String get timeFormatted => DateFormat('HH:mm, MMM dd').format(time);

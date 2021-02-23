@@ -10,7 +10,8 @@ import '../widgets/wadi_scaffold.dart';
 class MostLikedActivitiesScreen extends StatelessWidget {
   static const route = '/most-liked-activities';
   final bool isMain;
-  const MostLikedActivitiesScreen({Key key, this.isMain = false})
+  final int limit;
+  const MostLikedActivitiesScreen({Key key, this.isMain = false, this.limit})
       : super(key: key);
 
   @override
@@ -26,7 +27,9 @@ class MostLikedActivitiesScreen extends StatelessWidget {
               child: DetailedActivitiesList(
                 title: Strings.mostLikedActivities,
                 fetchActivitiesCallback: () {
-                  return context.read<Api>().fetchActivities(sortedBy: 'likes', limit: 150);
+                  return context
+                      .read<Api>()
+                      .fetchActivities(sortedBy: 'likes', limit: 4);
                 },
               ),
             ),
