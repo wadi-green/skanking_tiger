@@ -87,6 +87,19 @@ class HttpApi implements Api {
     }
   }
 
+  Future<PlanterFriend> addFriend(
+      String planterId, String friendId, String token) async {
+    final response = await authenticatedClient(token).post(
+      '/secured/api/v1/planters/$planterId/friends/$friendId/add',
+    );
+    try {
+      checkErrors(response);
+      return PlanterFriend.fromJson(response.data as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId) async {
     final response = await basicClient()

@@ -31,6 +31,7 @@ abstract class Api {
   Future<PlanterCheckIn> logPlanterCheckIn(String planterId, PlanterCheckIn checkIn, String token);
   Future<List<PlanterNotification>> fetchPlanterNotifications(String planterId, String token);
   Future<Activity> likeActivity(String planterId, String activityId, String token);
+  Future<PlanterFriend> addFriend(String planterId, String friendId, String token);
 
   /// Search Requests
   Future<SearchResults> searchActivities({String keyword, int limit});
