@@ -149,6 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
             activities: results.mostLikedActivities,
             callback: () => Navigator.of(context).pushNamed(
               MostLikedActivitiesScreen.route,
+              arguments: RouteArguments(data: {'limit': 50})
             ),
           ),
           cardsSpacer,

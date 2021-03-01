@@ -212,6 +212,7 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
       String planterId, int month, int year, String token) async {
+    print(token);
     final response = await authenticatedClient(token).get(
       '/secured/api/v1/planters/$planterId/checkins',
       queryParameters: {'date': '$month/$year'},

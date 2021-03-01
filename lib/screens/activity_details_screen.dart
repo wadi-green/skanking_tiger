@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:wadi_green/data/planter.dart';
 
 import '../api/api.dart';
 import '../core/colors.dart';
@@ -154,8 +155,11 @@ class _ActivityDetails extends StatelessWidget {
                           ),
                           context.read<AuthModel>().tokenData.accessToken,
                         );
-                    // update context user with the new activity ID
-                    context.read<AuthModel>().user.activities.add(activity.id);
+                    // update planter in context
+                    final updatedPlanter = await context
+                        .read<Api>()
+                        .fetchPlanter(context.read<AuthModel>().user.id);
+                    context.read<AuthModel>().updateUser(updatedPlanter);
                   } else {
                     Navigator.pushNamed(context, LogInScreen.route);
                   }

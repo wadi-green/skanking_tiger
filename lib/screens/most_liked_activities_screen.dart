@@ -29,7 +29,7 @@ class MostLikedActivitiesScreen extends StatelessWidget {
                 fetchActivitiesCallback: () {
                   return context
                       .read<Api>()
-                      .fetchActivities(sortedBy: 'likes', limit: 4);
+                      .fetchActivities(sortedBy: 'likes', limit: limit);
                 },
               ),
             ),
