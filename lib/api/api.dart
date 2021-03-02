@@ -1,6 +1,5 @@
 import '../data/activity/activity.dart';
 import '../data/activity/planter_activity.dart';
-import '../data/bug.dart';
 import '../data/chat.dart';
 import '../data/login_response.dart';
 import '../data/message.dart';
