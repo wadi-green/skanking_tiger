@@ -50,6 +50,4 @@ abstract class Api {
   Future<List<Message>> fetchGroupMessages(String planterId, String messageGroupId);
   Future<Message> sendMessageToGroup(Message message, String planterId, String messageGroupId);
 
-  /// bug reporting
-  Future<void> fileBug(Bug bug);
 }

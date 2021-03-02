@@ -133,5 +133,6 @@ class Planter extends Equatable {
         'picture': picture,
         'totalPlants': totalPlants,
         'categories': mostActiveCategories.map((c) => c.toJson()).toList(),
+        'activities': activities,
       };
 }

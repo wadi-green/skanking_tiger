@@ -2,7 +2,6 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 
 import '../../data/activity/activity.dart';
 import '../../data/activity/planter_activity.dart';
-import '../../data/bug.dart';
 import '../../data/chat.dart';
 import '../../data/login_response.dart';
 import '../../data/message.dart';
@@ -212,7 +211,6 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
       String planterId, int month, int year, String token) async {
-    print(token);
     final response = await authenticatedClient(token).get(
       '/secured/api/v1/planters/$planterId/checkins',
       queryParameters: {'date': '$month/$year'},
@@ -252,17 +250,6 @@ class HttpApi implements Api {
     try {
       checkErrors(response);
       return Activity.fromJson(response.data as Map<String, dynamic>);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> fileBug(Bug bug) async {
-    final response = await basicClient()
-        .post('/public/api/v1/feedback/report', data: bug.toJson());
-    try {
-      checkErrors(response);
     } catch (e) {
       rethrow;
     }
