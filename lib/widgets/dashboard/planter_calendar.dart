@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:wadi_green/models/auth_model.dart';
 
 import '../../api/api.dart';
 import '../../core/colors.dart';
@@ -10,6 +9,7 @@ import '../../core/constants.dart';
 import '../../core/text_styles.dart';
 import '../../data/planter.dart';
 import '../../data/planter_checkin.dart';
+import '../../models/auth_model.dart';
 import '../../utils/date_time_extension.dart';
 import '../../utils/strings.dart';
 import '../custom_card.dart';

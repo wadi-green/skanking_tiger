@@ -17,13 +17,8 @@ class MainColors {
     900: Color(0xff0d2805)
   });
 
-  /// Blue
   static const blue = Color(0xff078C86);
-
-  /// Red
   static const red = Color(0xff8C390E);
-
-  /// Light Green
   static const lightGreen = Color(0xff008D36);
 
   /// Grayscale

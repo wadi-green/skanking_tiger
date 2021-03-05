@@ -17,7 +17,6 @@ import '../screens/notifications_screen.dart';
 import '../screens/personal_plant_screen.dart';
 import '../screens/plant_canvas_screen.dart';
 import '../screens/profile_settings_screen.dart';
-import '../screens/report_bug_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/sign_up_screen.dart';
 
@@ -45,8 +44,6 @@ Widget _resolveDestination(String routeName, RouteArguments args) {
       return DashboardScreen(isMain: args.isMain);
     case InvitationFormScreen.route:
       return InvitationFormScreen(isMain: args.isMain);
-    case ReportBugScreen.route:
-      return ReportBugScreen(isMain: args.isMain);
     case LandingScreen.route:
       return LandingScreen(isMain: args.isMain);
     case LogInScreen.route:

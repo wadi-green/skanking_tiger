@@ -57,18 +57,26 @@ class DashboardScreen extends StatelessWidget {
                   cardsSpacer,
                   PlanterCalendar(planter: user, title: Strings.myCalendar),
                   cardsSpacer,
-                  ActivityCategories(
-                    title: Strings.activityCategories,
-                    categories: user.mostActiveCategories,
-                    onPressed: (category) {
-                      Navigator.of(context).pushNamed(
-                        SearchScreen.route,
-                        arguments: RouteArguments(
-                          data: {SearchScreen.queryArg: category},
-                        ),
-                      );
-                    },
-                  ),
+                  if (user.mostActiveCategories.isNotEmpty)
+                    ActivityCategories(
+                      title: Strings.activityCategories,
+                      categories: user.mostActiveCategories,
+                      onPressed: (category) {
+                        Navigator.of(context).pushNamed(
+                          SearchScreen.route,
+                          arguments: RouteArguments(
+                            data: {SearchScreen.queryArg: category},
+                          ),
+                        );
+                      },
+                    )
+                  else
+                    const CustomCard(
+                      title: Strings.activityCategories,
+                      titleSpacing: 16,
+                      padding: EdgeInsets.fromLTRB(16, 12, 16, 18),
+                      children: [Text("You haven't started any activity yet!")],
+                    ),
                 ],
               ),
             ),
@@ -89,12 +97,15 @@ class DashboardScreen extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: CachedNetworkImage(
-                  imageUrl: user.picture,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  height: 130,
-                  placeholder: (_, __) => loadingImagePlaceholder,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(2)),
+                  child: CachedNetworkImage(
+                    imageUrl: user.picture,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    height: 130,
+                    placeholder: (_, __) => loadingImagePlaceholder,
+                  ),
                 ),
               ),
               const SizedBox(width: 18),

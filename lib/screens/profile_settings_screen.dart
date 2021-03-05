@@ -47,8 +47,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     _user = context.read<AuthModel>().user;
     _nameController.text = _user.fullName;
     _aboutController.text = _user.aboutMe;
-    // TODO update?
-    _favActivitiesController.text = _user.activities.join(', ');
+    _favActivitiesController.text = _user.favoriteActivities;
     _country = countries.contains(_user.country) ? _user.country : null;
     _cityController.text = _user.city;
   }
@@ -313,7 +312,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           aboutMe: _aboutController.text,
           city: _cityController.text,
           country: _country,
-          // TODO fav activities
+          favoriteActivities: _favActivitiesController.text,
         );
         await context.read<Api>().updatePlanter(
               context.read<AuthModel>().user.id,

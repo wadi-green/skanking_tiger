@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:wadi_green/data/planter.dart';
 
 import '../api/api.dart';
 import '../core/colors.dart';
@@ -94,10 +93,14 @@ class _ActivityDetails extends StatelessWidget {
             cardsSpacer,
             ActivityStatsGrid(activity: activity),
             cardsSpacer,
-            buildBenefits(context),
-            cardsSpacer,
-            ExternalLinksWidget(activity: activity),
-            cardsSpacer,
+            if (activity.benefits.isNotEmpty) ...[
+              buildBenefits(context),
+              cardsSpacer,
+            ],
+            if (activity.externalLinks.isNotEmpty) ...[
+              ExternalLinksWidget(activity: activity),
+              cardsSpacer,
+            ],
             ActivityCategories(
               title: Strings.activityCategories,
               categories: activity.categories,
@@ -119,13 +122,16 @@ class _ActivityDetails extends StatelessWidget {
   Widget buildHeader(BuildContext context) => CustomCard(
         padding: innerEdgeInsets,
         children: [
-          AspectRatio(
-            aspectRatio: 2, // To make it a landscape image
-            child: CachedNetworkImage(
-              imageUrl: activity.image,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => loadingImagePlaceholder,
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
+            child: AspectRatio(
+              aspectRatio: 2, // To make it a landscape image
+              child: CachedNetworkImage(
+                imageUrl: activity.image,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => loadingImagePlaceholder,
+              ),
             ),
           ),
           const SizedBox(height: 12),

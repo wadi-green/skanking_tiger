@@ -126,33 +126,40 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           CompactActivitiesList(
             title: Strings.activitiesList,
+            subtitle: 'Showing ${results.results.length} activities '
+                'of ${results.totalResults} for $_query',
             activities: results.results,
             callback: () => Navigator.of(context).pushNamed(
                 AllActivitiesScreen.route,
                 arguments: RouteArguments(data: {SearchScreen.queryArg: q})),
           ),
           cardsSpacer,
-          HashtagsWidget(
-            title: Strings.relatedHashtags,
-            hashtags: results.hashtags?.related ?? [],
-            onPressed: resetSearch,
-          ),
-          cardsSpacer,
-          ActivityCategories(
-            title: Strings.activityCategories,
-            categories: results.categories,
-            onPressed: resetSearch,
-          ),
-          cardsSpacer,
-          CompactActivitiesList(
-            title: Strings.mostLikedActivities,
-            activities: results.mostLikedActivities,
-            callback: () => Navigator.of(context).pushNamed(
-              MostLikedActivitiesScreen.route,
-              arguments: RouteArguments(data: {'limit': 50})
+          if ((results.hashtags?.related ?? []).isNotEmpty) ...[
+            HashtagsWidget(
+              title: Strings.relatedHashtags,
+              hashtags: results.hashtags?.related ?? [],
+              onPressed: resetSearch,
             ),
-          ),
-          cardsSpacer,
+            cardsSpacer,
+          ],
+          if (results.categories.isNotEmpty) ...[
+            ActivityCategories(
+              title: Strings.activityCategories,
+              categories: results.categories,
+              onPressed: resetSearch,
+            ),
+            cardsSpacer,
+          ],
+          if (results.mostLikedActivities.isNotEmpty) ...[
+            CompactActivitiesList(
+              title: Strings.mostLikedActivities,
+              activities: results.mostLikedActivities,
+              callback: () => Navigator.of(context).pushNamed(
+                  MostLikedActivitiesScreen.route,
+                  arguments: const RouteArguments(data: {'limit': 50})),
+            ),
+            cardsSpacer,
+          ],
           HashtagsWidget(
             title: Strings.popularHashtags,
             hashtags: results.hashtags?.popular ?? [],

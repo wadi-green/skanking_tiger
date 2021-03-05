@@ -12,7 +12,8 @@ BaseOptions _requestOptions([String token]) {
     baseUrl: AppConfig.baseUrl,
     connectTimeout: 5000, // in milliseconds, so = 5 seconds
     receiveTimeout: 20000, // when downloading for example, also in milliseconds
-    headers: token == null ? null : {'api-key': token}, // the api-key authentication is done on server side
+    // the api-key authentication is done on server side
+    headers: token == null ? null : {'api-key': token},
     // Always check the response even if it's a 500 error
     validateStatus: (status) => true,
   );
@@ -57,6 +58,11 @@ void checkErrors(Response response, [String errorMsg]) {
   switch (code) {
     case 500:
       throw const ServerErrorException();
+    case 429:
+      throw ApiException(
+        message: 'You have reached your rate limit. Please try again later',
+        code: code,
+      );
     default:
       throw ApiException(
         message: response.data['message'] as String,

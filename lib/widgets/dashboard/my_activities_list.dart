@@ -36,24 +36,26 @@ class _MyActivitiesListState extends State<MyActivitiesList> {
       title: Strings.myActivities,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 150),
-          child: AdvancedFutureBuilder<List<PlanterActivity>>(
-            future: _future,
-            builder: (activities) => Column(children: [
+        AdvancedFutureBuilder<List<PlanterActivity>>(
+          future: _future,
+          builder: (activities) => Column(children: [
+            if (activities.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 12, top: 4),
+                child: Text("You haven't started any activity yet!"),
+              )
+            else
               for (final activity in activities) ...[
                 buildActivityTile(activity),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
               ]
-            ]),
-            onRefresh: () {
-              setState(() {
-                _future = context
-                    .read<Api>()
-                    .fetchPlanterActivities(widget.planterId);
-              });
-            },
-          ),
+          ]),
+          onRefresh: () {
+            setState(() {
+              _future =
+                  context.read<Api>().fetchPlanterActivities(widget.planterId);
+            });
+          },
         ),
       ],
     );

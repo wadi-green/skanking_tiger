@@ -106,9 +106,11 @@ class CustomStepper extends StatelessWidget {
                   )
                 else
                   const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: _buildHeaderText(index),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: _buildHeaderText(index),
+                  ),
                 ),
                 if (index.isOdd)
                   Padding(

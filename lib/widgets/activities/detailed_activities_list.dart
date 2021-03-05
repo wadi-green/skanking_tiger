@@ -75,7 +75,7 @@ class _DetailedActivitiesListState extends State<DetailedActivitiesList> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: activities.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
       itemBuilder: (_, i) => DetailedActivityTile(activity: activities[i]),
     );
   }

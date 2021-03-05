@@ -48,12 +48,15 @@ class DetailedActivityTile extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: AspectRatio(
-              aspectRatio: 0.7, // portrait image
-              child: CachedNetworkImage(
-                imageUrl: activity.image,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => loadingImagePlaceholder,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(2)),
+              child: AspectRatio(
+                aspectRatio: 0.7, // portrait image
+                child: CachedNetworkImage(
+                  imageUrl: activity.image,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => loadingImagePlaceholder,
+                ),
               ),
             ),
           ),

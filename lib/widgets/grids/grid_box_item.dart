@@ -26,13 +26,17 @@ class GridBoxItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: AspectRatio(
-            aspectRatio: 1, // Square image
-            child: InkWell(
-              onTap: onPressed,
-              child: CachedNetworkImage(
-                imageUrl: imgUrl,
-                placeholder: (_, __) => loadingImagePlaceholder,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
+            child: AspectRatio(
+              aspectRatio: 1, // Square image
+              child: InkWell(
+                onTap: onPressed,
+                child: CachedNetworkImage(
+                  imageUrl: imgUrl,
+                  placeholder: (_, __) => loadingImagePlaceholder,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
