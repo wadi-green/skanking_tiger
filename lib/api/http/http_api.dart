@@ -86,6 +86,7 @@ class HttpApi implements Api {
     }
   }
 
+  @override
   Future<PlanterFriend> addFriend(
       String planterId, String friendId, String token) async {
     final response = await authenticatedClient(token).post(

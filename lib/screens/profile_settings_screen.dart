@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +9,11 @@ import 'package:provider/provider.dart';
 import '../api/api.dart';
 import '../core/colors.dart';
 import '../core/constants.dart';
-import '../data/activity/planter_activity.dart';
 import '../data/planter.dart';
 import '../models/auth_model.dart';
 import '../utils/strings.dart';
 import '../utils/validators.dart';
 import '../utils/wadi_green_icons.dart';
-import '../widgets/advanced_future_builder.dart';
 import '../widgets/auth/auth_button.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/wadi_scaffold.dart';
@@ -33,12 +32,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final picker = ImagePicker();
   final _nameController = TextEditingController();
   final _aboutController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _favActivitiesController = TextEditingController();
   final _focusDismiss = FocusNode();
-  final List<PlanterActivity> _favoriteActivities = [];
   // The user is saved here and used to restore original data on cancel
   Planter _user;
   File _image;
-  Future<List<PlanterActivity>> _planterActivities;
+  String _country;
   bool _isLoading = false;
 
   @override
@@ -47,13 +47,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     _user = context.read<AuthModel>().user;
     _nameController.text = _user.fullName;
     _aboutController.text = _user.aboutMe;
-    _planterActivities = context.read<Api>().fetchPlanterActivities(_user.id);
+    // TODO update?
+    _favActivitiesController.text = _user.activities.join(', ');
+    _country = countries.contains(_user.country) ? _user.country : null;
+    _cityController.text = _user.city;
   }
 
   @override
   void dispose() {
     _nameController?.dispose();
     _aboutController?.dispose();
+    _cityController?.dispose();
+    _favActivitiesController?.dispose();
     _focusDismiss?.dispose();
     super.dispose();
   }
@@ -82,19 +87,28 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   Widget build(BuildContext context) {
     return WadiScaffold(
       hasDrawer: widget.isMain,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: wrapEdgeInsets,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                buildBasicInfo(),
-                const SizedBox(height: 12),
-                buildFavoriteActivities(),
-                const SizedBox(height: 12),
-                buildAccountSettings(),
-              ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(_focusDismiss);
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: wrapEdgeInsets,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  buildBasicInfo(),
+                  const SizedBox(height: 12),
+                  buildLocation(),
+                  const SizedBox(height: 12),
+                  buildFavoriteActivities(),
+                  const SizedBox(height: 12),
+                  buildPreferences(),
+                  const SizedBox(height: 12),
+                  buildAccountSettings(),
+                ],
+              ),
             ),
           ),
         ),
@@ -154,20 +168,75 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         ],
       );
 
+  Widget buildLocation() => CustomCard(
+        title: Strings.location,
+        padding: wrapEdgeInsets,
+        children: [
+          DropdownButtonFormField<String>(
+            value: _country,
+            selectedItemBuilder: (_) => countries
+                .map((c) =>
+                    Text(c, maxLines: 1, overflow: TextOverflow.ellipsis))
+                .toList(),
+            onChanged: (country) => setState(() => _country = country),
+            isExpanded: true,
+            items: countries.map<DropdownMenuItem<String>>((c) {
+              return DropdownMenuItem(value: c, child: Text(c));
+            }).toList(),
+            iconSize: 22,
+            icon: const Icon(CupertinoIcons.chevron_down, size: 22),
+            decoration: const InputDecoration(
+              hintText: Strings.chooseCountry,
+              alignLabelWithHint: true,
+              suffix: SizedBox(width: 6),
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _cityController,
+            keyboardType: TextInputType.streetAddress,
+            decoration: const InputDecoration(hintText: Strings.city),
+          ),
+        ],
+      );
+
   Widget buildFavoriteActivities() => CustomCard(
         title: Strings.favoriteActivities,
         padding: wrapEdgeInsets,
         children: [
-          GestureDetector(
-            onTap: showFavoriteActivitiesDialog,
-            child: AbsorbPointer(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  hintText: Strings.chooseActivity,
-                  prefixIcon: Icon(WadiGreenIcons.activities, size: 20),
-                  suffixIcon: Icon(WadiGreenIcons.downArrow, size: 10),
-                ),
-              ),
+          TextFormField(
+            controller: _favActivitiesController,
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
+            maxLength: 150,
+            decoration: const InputDecoration(
+              hintText: Strings.favoriteActivitiesHint,
+              counter: SizedBox(),
+            ),
+          ),
+        ],
+      );
+
+  Widget buildPreferences() => CustomCard(
+        title: Strings.preferences,
+        padding: wrapEdgeInsets,
+        children: [
+          DropdownButtonFormField<String>(
+            value: 'English',
+            onChanged: null,
+            isExpanded: true,
+            disabledHint: const Text('English'),
+            items: ['English'].map<DropdownMenuItem<String>>((c) {
+              return DropdownMenuItem(value: c, child: Text(c));
+            }).toList(),
+            iconSize: 22,
+            icon: const Icon(CupertinoIcons.chevron_down, size: 22),
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              suffix: const SizedBox(width: 6),
+              helperText: Strings.languagesComingSoon,
             ),
           ),
         ],
@@ -235,60 +304,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
-  void showFavoriteActivitiesDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(Strings.favoriteActivities),
-        contentPadding: const EdgeInsets.symmetric(vertical: 12),
-        content: AdvancedFutureBuilder<List<PlanterActivity>>(
-          future: _planterActivities,
-          onRefresh: () {
-            setState(() {
-              _planterActivities =
-                  context.read<Api>().fetchPlanterActivities(_user.id);
-            });
-          },
-          builder: (activities) => StatefulBuilder(
-            builder: (context, setState) => ListView.builder(
-              shrinkWrap: true,
-              itemCount: activities.length,
-              itemBuilder: (context, i) {
-                final activity = activities[i];
-                return CheckboxListTile(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(activity.title),
-                  value: _favoriteActivities.contains(activity),
-                  onChanged: (chosen) {
-                    setState(() {
-                      if (chosen) {
-                        _favoriteActivities.add(activity);
-                      } else {
-                        _favoriteActivities.remove(activity);
-                      }
-                    });
-                  },
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> submit(BuildContext context) async {
     if (_formKey.currentState.validate()) {
       setState(() => _isLoading = true);
       try {
         await Future.delayed(const Duration(seconds: 2));
-        final updatedUser = _user.copyWith(aboutMe: _aboutController.text);
-        context.read<AuthModel>().updateUser(updatedUser);
+        final updatedUser = _user.copyWith(
+          aboutMe: _aboutController.text,
+          city: _cityController.text,
+          country: _country,
+          // TODO fav activities
+        );
         await context.read<Api>().updatePlanter(
-            context.read<AuthModel>().user.id,
-            updatedUser,
-            context.read<AuthModel>().tokenData.accessToken,
-          );
+              context.read<AuthModel>().user.id,
+              updatedUser,
+              context.read<AuthModel>().tokenData.accessToken,
+            );
+        context.read<AuthModel>().updateUser(updatedUser);
         _user = updatedUser;
         resetFields();
         Scaffold.of(context)

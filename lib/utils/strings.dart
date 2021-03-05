@@ -123,7 +123,9 @@ class Strings {
   static const fullName = 'Full name';
   static const profilePhoto = 'Profile photo';
   static const aboutYourself = 'Tell us about yourself';
-  static const favoriteActivities = 'Favorite activities';
+  static const location = 'Location';
+  static const city = 'City';
+  static const chooseCountry = 'Choose a country';
   static const chooseActivity = 'Choose activity';
   static const accountSettings = 'Account settings';
   static const changePassword = 'Change password';
@@ -134,6 +136,10 @@ class Strings {
   static const closeAccountConfirmation =
       'Are you sure you want to close your account?';
   static const passwordChanged = 'Your password has been successfully updated';
+  static const favoriteActivities = 'Favorite Activities';
+  static const favoriteActivitiesHint = 'What kind of activities you like?';
+  static const preferences = 'Preferences';
+  static const languagesComingSoon = 'More language support coming soon';
 
   /// Messages
   static const noMessagesYet = 'No messages yet';
