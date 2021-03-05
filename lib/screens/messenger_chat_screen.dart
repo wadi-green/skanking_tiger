@@ -45,9 +45,10 @@ class _MessengerChatScreenState extends State<MessengerChatScreen> {
     super.initState();
     currentUser = context.read<AuthModel>().user;
     _messagesProvider = MessagesProvider(widget.chat.friendAvatar);
-    _messages = context
-        .read<Api>()
-        .fetchGroupMessages(currentUser.id, widget.chat.chatGroupId);
+    // TODO uncomment to restore messages
+    // _messages = context
+    //     .read<Api>()
+    //     .fetchGroupMessages(currentUser.id, widget.chat.chatGroupId);
   }
 
   @override
@@ -79,27 +80,38 @@ class _MessengerChatScreenState extends State<MessengerChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: AdvancedFutureBuilder<List<Message>>(
-              future: _messages,
-              builder: (messages) {
-                if (_forceRefresh ||
-                    _messagesProvider.messages.length < messages.length) {
-                  _forceRefresh = false;
-                  _messagesProvider.setMessages(messages);
-                }
-                return ChangeNotifierProvider.value(
-                  value: _messagesProvider,
-                  child: ChatBody(
-                    onRefresh: () {
-                      setState(() {
-                        _forceRefresh = true;
-                        _messages = context.read<Api>().fetchGroupMessages(
-                            currentUser.id, widget.chat.chatGroupId);
-                      });
-                    },
-                  ),
-                );
-              },
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Messages are coming soon. Stay tuned!',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              ),
+            ),
+          ),
+          // TODO uncomment to restore messages
+          // buildOriginalMessages(),
+          buildMessageField(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildOriginalMessages() {
+    return Expanded(
+      child: AdvancedFutureBuilder<List<Message>>(
+        future: _messages,
+        builder: (messages) {
+          if (_forceRefresh ||
+              _messagesProvider.messages.length < messages.length) {
+            _forceRefresh = false;
+            _messagesProvider.setMessages(messages);
+          }
+          return ChangeNotifierProvider.value(
+            value: _messagesProvider,
+            child: ChatBody(
               onRefresh: () {
                 setState(() {
                   _forceRefresh = true;
@@ -108,14 +120,20 @@ class _MessengerChatScreenState extends State<MessengerChatScreen> {
                 });
               },
             ),
-          ),
-          buildMessageField(),
-        ],
+          );
+        },
+        onRefresh: () {
+          setState(() {
+            _forceRefresh = true;
+            _messages = context.read<Api>().fetchGroupMessages(
+                currentUser.id, widget.chat.chatGroupId);
+          });
+        },
       ),
     );
   }
 
-  Widget buildMessageField() => Container(
+  Widget buildMessageField() => Ink(
         color: Colors.white,
         child: Row(
           children: [
@@ -124,6 +142,8 @@ class _MessengerChatScreenState extends State<MessengerChatScreen> {
                 padding: const EdgeInsets.fromLTRB(12, 8, 8, 16),
                 child: TextField(
                   controller: _messageController,
+                  // TODO set to true to enable messages
+                  enabled: false,
                   decoration: const InputDecoration(
                     isDense: true,
                     hintText: Strings.message,

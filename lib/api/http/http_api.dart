@@ -346,7 +346,7 @@ class HttpApi implements Api {
   Future<List<Message>> fetchGroupMessages(
       String planterId, String messageGroupId) async {
     final response = await authenticatedClient('').get(
-      'planters/$planterId/chatGroups/$messageGroupId',
+      '/planters/$planterId/chatGroups/$messageGroupId',
     );
     try {
       checkErrors(response);
@@ -362,7 +362,7 @@ class HttpApi implements Api {
   Future<Message> sendMessageToGroup(
       Message message, String planterId, String messageGroupId) async {
     final response = await authenticatedClient('').post(
-      'planters/$planterId/chatGroups/$messageGroupId',
+      '/planters/$planterId/chatGroups/$messageGroupId',
       data: message.toJson(),
     );
     try {
@@ -376,7 +376,7 @@ class HttpApi implements Api {
   @override
   Future<List<Chat>> fetchAllGroups(String planterId) async {
     final response = await authenticatedClient('').get(
-      'planters/$planterId/chatGroups',
+      '/planters/$planterId/chatGroups',
     );
     try {
       checkErrors(response);

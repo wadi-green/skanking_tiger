@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../api/api.dart';
 import '../core/colors.dart';
 import '../data/chat.dart';
 import '../models/auth_model.dart';
 import '../utils/strings.dart';
-import '../widgets/advanced_future_builder.dart';
 import '../widgets/chat/messenger_chat_route.dart';
 import '../widgets/wadi_scaffold.dart';
 
@@ -23,9 +21,11 @@ class MessengerListScreen extends StatefulWidget {
 
 class _MessengerListScreenState extends State<MessengerListScreen> {
   String _query;
-  String _userId;
+  // TODO uncomment to activate
+  // String _userId;
   String _userAvatar;
-  Future<List<Chat>> _chats;
+  // TODO uncomment to activate
+  // Future<List<Chat>> _chats;
   bool _showSearch = false;
 
   @override
@@ -33,8 +33,9 @@ class _MessengerListScreenState extends State<MessengerListScreen> {
     super.initState();
     final user = context.read<AuthModel>().user;
     _userAvatar = user.picture;
-    _userId = user.id;
-    _chats = context.read<Api>().fetchAllGroups(_userId);
+    // TODO uncomment to activate
+    // _userId = user.id;=
+    // _chats = context.read<Api>().fetchAllGroups(_userId);
   }
 
   Widget get searchField => TextField(
@@ -78,21 +79,37 @@ class _MessengerListScreenState extends State<MessengerListScreen> {
                 IconButton(
                   color: Colors.white,
                   icon: const Icon(Icons.search),
-                  onPressed: () => setState(() => _showSearch = true),
+                  onPressed: () {
+                    // TODO uncomment to activate
+                    // setState(() => _showSearch = true);
+                  },
                 )
             ],
           ),
           Expanded(
-            child: AdvancedFutureBuilder<List<Chat>>(
-              future: _chats,
-              builder: buildChats,
-              onRefresh: () {
-                setState(() {
-                  _chats = context.read<Api>().fetchAllGroups(_userId);
-                });
-              },
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Messages are coming soon. Stay tuned!',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ),
             ),
           ),
+          // TODO uncomment to activate
+          // Expanded(
+          //   child: AdvancedFutureBuilder<List<Chat>>(
+          //     future: _chats,
+          //     builder: buildChats,
+          //     onRefresh: () {
+          //       setState(() {
+          //         _chats = context.read<Api>().fetchAllGroups(_userId);
+          //       });
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
