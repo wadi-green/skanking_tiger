@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/api.dart';
-import '../../api/api_exceptions.dart';
 import '../../core/colors.dart';
 import '../../core/constants.dart';
 import '../../data/activity/activity.dart';
@@ -47,34 +46,28 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
   Future<void> _checkActivityStatus() async {
     final currentPlanter = context.read<AuthModel>().user;
     final tokenData = context.read<AuthModel>().tokenData;
-    if (currentPlanter == null || !currentPlanter.activities.contains(widget.activity.id)) {
+    if (currentPlanter == null ||
+        !currentPlanter.activities.contains(widget.activity.id)) {
       // Do nothing for guest users
       return;
     }
     setState(() => _isLoading = true);
     try {
-      final result = await context
-          .read<Api>()
-          .fetchPlanterActivity(currentPlanter.id, widget.activity.id, tokenData.accessToken);
+      final result = await context.read<Api>().fetchPlanterActivity(
+          currentPlanter.id, widget.activity.id, tokenData.accessToken);
       _planterActivity = result;
     } catch (e) {
-      if (e is ApiException && e.code == 404) {
-        // The planter doesn't have records for this activity, so they can
-        // start with the first step
-        _planterActivity = PlanterActivity.fromNewActivity(widget.activity);
-      } else {
-        Scaffold.of(context)
-          ..removeCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            content: Text(e.toString()),
-            duration: const Duration(seconds: 5),
-            action: SnackBarAction(
-              label: Strings.retry,
-              textColor: Colors.white,
-              onPressed: _checkActivityStatus,
-            ),
-          ));
-      }
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(e.toString()),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: Strings.retry,
+            textColor: Colors.white,
+            onPressed: _checkActivityStatus,
+          ),
+        ));
     }
     setState(() => _isLoading = false);
   }

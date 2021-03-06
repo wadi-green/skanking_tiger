@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../core/colors.dart';
 import '../custom_painters/quadrant_border_painter.dart';
+import 'radial_glow.dart';
 
 @immutable
 class CustomStep {
@@ -30,14 +33,12 @@ class CustomStepper extends StatelessWidget {
     @required this.steps,
     @required this.titleStyle,
     @required this.subtitleStyle,
-    this.lineHeight = 16.0,
   })  : assert(steps != null),
         assert(titleStyle != null),
         assert(subtitleStyle != null),
         super(key: key);
 
   final List<CustomStep> steps;
-  final double lineHeight;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
 
@@ -52,8 +53,7 @@ class CustomStepper extends StatelessWidget {
         children: <Widget>[
           DefaultTextStyle(
             style: titleStyle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            textAlign: index.isEven ? TextAlign.start : TextAlign.end,
             child: steps[index].title,
           ),
           if (steps[index].subtitle != null)
@@ -61,8 +61,7 @@ class CustomStepper extends StatelessWidget {
               padding: const EdgeInsets.only(top: 2.0),
               child: DefaultTextStyle(
                 style: subtitleStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: index.isEven ? TextAlign.start : TextAlign.end,
                 child: steps[index].subtitle,
               ),
             ),
@@ -70,58 +69,51 @@ class CustomStepper extends StatelessWidget {
       );
 
   Widget _buildVerticalHeader(int index) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: InkWell(
-        onTap: steps[index].onTap,
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: steps[index].icon.radius,
-              ),
-              child: SizedBox(
-                height: steps[index].icon.radius * 2 + lineHeight * 2,
-                width: double.infinity,
-                child: CustomPaint(
-                  painter: QuadrantBorderPainter(
-                    topLeft: index.isEven && !_isFirst(index),
-                    topRight: index.isOdd && !_isFirst(index),
-                    bottomLeft: index.isEven && !_isLast(index),
-                    bottomRight: index.isOdd && !_isLast(index),
-                    borderWidth: 2,
-                    borderColor: steps[index].isCompleted
-                        ? MainColors.lightGreen
-                        : MainColors.darkGrey,
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                if (index.isEven)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: lineHeight),
-                    child: steps[index].icon,
-                  )
-                else
-                  const Spacer(),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: _buildHeaderText(index),
-                  ),
-                ),
-                if (index.isOdd)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: lineHeight),
-                    child: steps[index].icon,
-                  )
-                else
-                  const Spacer(),
-              ],
-            ),
-          ],
+    const hMargin = 8.0;
+    final icon = steps[index].onTap == null
+        ? Padding(
+            padding: const EdgeInsets.all(hMargin),
+            child: steps[index].icon,
+          )
+        : _NudgingIcon(
+            isLeft: index.isEven,
+            hMargin: hMargin,
+            radius: steps[index].icon.radius,
+            icon: steps[index].icon,
+          );
+
+    return InkWell(
+      onTap: steps[index].onTap,
+      child: SizedBox(
+        width: double.infinity,
+        child: CustomPaint(
+          painter: QuadrantBorderPainter(
+            topLeft: index.isEven && !_isFirst(index),
+            topRight: index.isOdd && !_isFirst(index),
+            bottomLeft: index.isEven && !_isLast(index),
+            bottomRight: index.isOdd && !_isLast(index),
+            borderWidth: 2,
+            hMargin: steps[index].icon.radius + hMargin,
+            borderColor: steps[index].isCompleted
+                ? MainColors.lightGreen
+                : MainColors.grey,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Row(children: <Widget>[
+              if (index.isEven) ...[
+                icon,
+                const SizedBox(width: hMargin * 0.75)
+              ] else
+                const SizedBox(width: hMargin),
+              Flexible(child: _buildHeaderText(index)),
+              if (index.isOdd) ...[
+                const SizedBox(width: hMargin * 0.75),
+                icon
+              ] else
+                const SizedBox(width: hMargin),
+            ]),
+          ),
         ),
       ),
     );
@@ -132,6 +124,95 @@ class CustomStepper extends StatelessWidget {
     return Column(
       children: <Widget>[
         for (int i = 0; i < steps.length; i += 1) _buildVerticalHeader(i)
+      ],
+    );
+  }
+}
+
+class _NudgingIcon extends StatefulWidget {
+  final Widget icon;
+  final double radius, hMargin;
+  final bool isLeft;
+  const _NudgingIcon({
+    Key key,
+    @required this.isLeft,
+    @required this.icon,
+    @required this.radius,
+    @required this.hMargin,
+  }) : super(key: key);
+
+  @override
+  _NudgingIconState createState() => _NudgingIconState();
+}
+
+class _NudgingIconState extends State<_NudgingIcon>
+    with TickerProviderStateMixin {
+  AnimationController _arrowController;
+  AnimationController _radialController;
+  Animation<double> _animationV;
+  Animation<double> _animationH;
+
+  @override
+  void initState() {
+    super.initState();
+    _arrowController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _radialController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _animationV = Tween<double>(begin: 0, end: 16).animate(CurvedAnimation(
+      parent: _arrowController,
+      curve: Curves.easeInOut,
+    ));
+    _animationH = Tween<double>(begin: 0, end: 8).animate(CurvedAnimation(
+      parent: _arrowController,
+      curve: Curves.easeInOut,
+    ));
+    _radialController.repeat();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _arrowController.repeat(reverse: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _arrowController.dispose();
+    _radialController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final angle = widget.isLeft ? pi / 3 : 2 * pi / 3;
+    return Stack(
+      alignment: Alignment.topCenter,
+      overflow: Overflow.visible,
+      children: [
+        RadialGlow(
+          controller: _radialController,
+          endRadius: widget.radius + widget.hMargin,
+          glowColor: MainColors.lightGreen,
+          child: widget.icon,
+        ),
+        AnimatedBuilder(
+          animation: _animationV,
+          builder: (context, child) => Positioned(
+            top: _animationV.value / 2 - 16,
+            right: widget.isLeft ? null : _animationH.value / 2,
+            left: widget.isLeft ? _animationH.value / 2 : null,
+            child: Transform.rotate(
+              angle: angle,
+              child: const Icon(
+                Icons.arrow_right_alt,
+                color: MainColors.darkGrey,
+                size: 18,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

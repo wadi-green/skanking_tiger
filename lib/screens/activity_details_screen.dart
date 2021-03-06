@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+
 import '../api/api.dart';
 import '../core/colors.dart';
 import '../core/constants.dart';
@@ -142,25 +143,28 @@ class _ActivityDetails extends StatelessWidget {
             alignment: MainAxisAlignment.end,
             buttonPadding: EdgeInsets.zero,
             children: [
-              IconButton(
-                tooltip: 'Add to my activities',
-                icon: Consumer<AuthModel>(
-                  builder: (context, model, child) {
-                    final isAdded = model.user.activities.contains(activity.id);
-                    return FaIcon(
+              Consumer<AuthModel>(
+                builder: (context, model, child) {
+                  final isAdded = model.user.activities.contains(activity.id);
+                  final btn = IconButton(
+                    tooltip: 'Add to my activities',
+                    color: Colors.white,
+                    icon: FaIcon(
                       WadiGreenIcons.addActivity,
                       color:
                           isAdded ? MainColors.lightGreen : MainColors.darkGrey,
-                    );
-                  },
-                ),
-                onPressed: () {
-                  final authModel = context.read<AuthModel>();
-                  if (!authModel.isLoggedIn) {
-                    Navigator.pushNamed(context, LogInScreen.route);
-                  } else if (!authModel.user.activities.contains(activity.id)) {
-                    addToMyActivities(context);
-                  }
+                    ),
+                    onPressed: () {
+                      final authModel = context.read<AuthModel>();
+                      if (!authModel.isLoggedIn) {
+                        Navigator.pushNamed(context, LogInScreen.route);
+                      } else if (!authModel.user.activities
+                          .contains(activity.id)) {
+                        addToMyActivities(context);
+                      }
+                    },
+                  );
+                  return isAdded ? btn : _StartActivityNudge(button: btn);
                 },
               ),
               IconButton(
@@ -281,5 +285,59 @@ class _ActivityDetails extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+class _StartActivityNudge extends StatefulWidget {
+  final Widget button;
+  const _StartActivityNudge({Key key, @required this.button}) : super(key: key);
+
+  @override
+  _StartActivityNudgeState createState() => _StartActivityNudgeState();
+}
+
+class _StartActivityNudgeState extends State<_StartActivityNudge>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0, end: 8).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.fastOutSlowIn,
+    ));
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Text(
+        'Start activity',
+        style: Theme.of(context).textTheme.caption,
+      ),
+      const Icon(
+        Icons.arrow_right_alt,
+        color: MainColors.darkGrey,
+        size: 18,
+      ),
+      AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) => SizedBox(width: _animation.value),
+      ),
+      widget.button,
+    ]);
   }
 }
