@@ -109,6 +109,7 @@ class Strings {
   /// Member screen
   static const message = 'Message';
   static const viewPlants = 'View plants';
+  static const addFriend = 'Add friend';
 
   /// Invitation form
   static const inviteAFriend = 'Invite a friend';
@@ -147,6 +148,7 @@ class Strings {
 
   /// API
   static const genericError = 'Something went wrong';
+  static const timeoutException = 'Connection timed out. Please retry';
   static const serverError500 =
       'Something broke in the backend, get in touch with ${AppConfig.supportEmail}';
 }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 
 import '../../data/activity/activity.dart';
@@ -22,20 +23,22 @@ class HttpApi implements Api {
   @override
   Future<List<Plant>> fetchPlants(
       {String sortedBy, int limit, List<String> ids}) async {
-    final response = await basicClient().get(
-      'plants',
-      queryParameters: {
-        if (sortedBy != null) 'sortedBy': sortedBy,
-        if (limit != null) 'limit': limit,
-        if (ids != null) 'ids': ids,
-      },
-    );
     try {
+      final response = await basicClient().get(
+        'plants',
+        queryParameters: {
+          if (sortedBy != null) 'sortedBy': sortedBy,
+          if (limit != null) 'limit': limit,
+          if (ids != null) 'ids': ids,
+        },
+      );
       checkErrors(response);
       final plants = (response.data as List)
           .map((e) => Plant.fromJson(e as Map<String, dynamic>))
           .toList();
       return plants;
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -43,10 +46,12 @@ class HttpApi implements Api {
 
   @override
   Future<Plant> fetchPlant(String plantId) async {
-    final response = await basicClient().get('plants/$plantId');
     try {
+      final response = await basicClient().get('plants/$plantId');
       checkErrors(response);
       return Plant.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -55,20 +60,22 @@ class HttpApi implements Api {
   @override
   Future<List<Planter>> fetchPlanters(
       {String sortedBy, int limit, List<String> ids}) async {
-    final response = await basicClient().get(
-      '/public/api/v1/planters',
-      queryParameters: {
-        if (sortedBy != null) 'sortedBy': sortedBy,
-        if (limit != null) 'limit': limit,
-        if (ids != null) 'ids': ids,
-      },
-    );
     try {
+      final response = await basicClient().get(
+        '/public/api/v1/planters',
+        queryParameters: {
+          if (sortedBy != null) 'sortedBy': sortedBy,
+          if (limit != null) 'limit': limit,
+          if (ids != null) 'ids': ids,
+        },
+      );
       checkErrors(response);
       final planters = (response.data as List)
           .map((e) => Planter.fromJson(e as Map<String, dynamic>))
           .toList();
       return planters;
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -76,11 +83,13 @@ class HttpApi implements Api {
 
   @override
   Future<Planter> fetchPlanter(String planterId) async {
-    final response =
-        await basicClient().get('/public/api/v1/planters/$planterId');
     try {
+      final response =
+          await basicClient().get('/public/api/v1/planters/$planterId');
       checkErrors(response);
       return Planter.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -89,12 +98,14 @@ class HttpApi implements Api {
   @override
   Future<PlanterFriend> addFriend(
       String planterId, String friendId, String token) async {
-    final response = await authenticatedClient(token).post(
-      '/secured/api/v1/planters/$planterId/friends/$friendId/add',
-    );
     try {
+      final response = await authenticatedClient(token).post(
+        '/secured/api/v1/planters/$planterId/friends/$friendId/add',
+      );
       checkErrors(response);
       return PlanterFriend.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -102,11 +113,13 @@ class HttpApi implements Api {
 
   @override
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId) async {
-    final response = await basicClient()
-        .get('/public/api/v1/planters/$planterId/planterCanvas');
     try {
+      final response = await basicClient()
+          .get('/public/api/v1/planters/$planterId/planterCanvas');
       checkErrors(response);
       return PlanterCanvas.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -115,17 +128,19 @@ class HttpApi implements Api {
   @override
   Future<SearchResults> searchActivities({String keyword, int limit}) async {
     // Search results are cached for improved user experience
-    final response = await cachedClient().get(
-      '/public/api/v1/search',
-      queryParameters: {
-        if (keyword != null) 'query': keyword,
-        if (limit != null) 'limit': limit,
-      },
-      options: buildCacheOptions(const Duration(hours: 1)),
-    );
     try {
+      final response = await cachedClient().get(
+        '/public/api/v1/search',
+        queryParameters: {
+          if (keyword != null) 'query': keyword,
+          if (limit != null) 'limit': limit,
+        },
+        options: buildCacheOptions(const Duration(hours: 1)),
+      );
       checkErrors(response);
       return SearchResults.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -134,20 +149,22 @@ class HttpApi implements Api {
   @override
   Future<List<Activity>> fetchActivities(
       {String sortedBy, int limit, String keyword}) async {
-    final response = await basicClient().get(
-      '/public/api/v1/activities',
-      queryParameters: {
-        if (sortedBy != null) 'sortedBy': sortedBy,
-        if (limit != null) 'limit': limit,
-        if (keyword != null) 'keyword': keyword,
-      },
-    );
     try {
+      final response = await basicClient().get(
+        '/public/api/v1/activities',
+        queryParameters: {
+          if (sortedBy != null) 'sortedBy': sortedBy,
+          if (limit != null) 'limit': limit,
+          if (keyword != null) 'keyword': keyword,
+        },
+      );
       checkErrors(response);
       final activities = (response.data as List)
           .map((e) => Activity.fromJson(e as Map<String, dynamic>))
           .toList();
       return activities;
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -155,11 +172,13 @@ class HttpApi implements Api {
 
   @override
   Future<Activity> fetchActivity(String activityId) async {
-    final response =
-        await basicClient().get('/public/api/v1/activities/$activityId');
     try {
+      final response =
+          await basicClient().get('/public/api/v1/activities/$activityId');
       checkErrors(response);
       return Activity.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -167,14 +186,16 @@ class HttpApi implements Api {
 
   @override
   Future<List<PlanterActivity>> fetchPlanterActivities(String planterId) async {
-    final response = await basicClient()
-        .get('/public/api/v1/planters/$planterId/activities');
     try {
+      final response = await basicClient()
+          .get('/public/api/v1/planters/$planterId/activities');
       checkErrors(response);
       final activities = (response.data as List)
           .map((e) => PlanterActivity.fromJson(e as Map<String, dynamic>))
           .toList();
       return activities;
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -183,12 +204,14 @@ class HttpApi implements Api {
   @override
   Future<PlanterActivity> fetchPlanterActivity(
       String planterId, String activityId, String token) async {
-    final response = await authenticatedClient(token).get(
-      '/secured/api/v1/planters/$planterId/activities/$activityId',
-    );
     try {
+      final response = await authenticatedClient(token).get(
+        '/secured/api/v1/planters/$planterId/activities/$activityId',
+      );
       checkErrors(response);
       return PlanterActivity.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -197,13 +220,15 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterNotification>> fetchPlanterNotifications(
       String planterId, String token) async {
-    final response = await authenticatedClient(token)
-        .get('/secured/api/v1/planters/$planterId/notifications');
     try {
+      final response = await authenticatedClient(token)
+          .get('/secured/api/v1/planters/$planterId/notifications');
       checkErrors(response);
       return (response.data as List)
           .map((e) => PlanterNotification.fromJson(e as Map<String, dynamic>))
           .toList();
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -212,17 +237,19 @@ class HttpApi implements Api {
   @override
   Future<List<PlanterCheckIn>> fetchPlanterCheckIns(
       String planterId, int month, int year, String token) async {
-    final response = await authenticatedClient(token).get(
-      '/secured/api/v1/planters/$planterId/checkins',
-      queryParameters: {'date': '$month/$year'},
-      options: buildCacheOptions(const Duration(minutes: 30)),
-    );
     try {
+      final response = await authenticatedClient(token).get(
+        '/secured/api/v1/planters/$planterId/checkins',
+        queryParameters: {'date': '$month/$year'},
+        options: buildCacheOptions(const Duration(minutes: 30)),
+      );
       checkErrors(response);
       final checkIns = (response.data as List)
           .map((e) => PlanterCheckIn.fromJson(e as Map<String, dynamic>))
           .toList();
       return checkIns;
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -230,14 +257,16 @@ class HttpApi implements Api {
 
   @override
   Future<List<PlanterFriend>> fetchPlanterFriends(String planterId) async {
-    final response =
-        await basicClient().get('/public/api/v1/planters/$planterId/friends');
     try {
+      final response =
+          await basicClient().get('/public/api/v1/planters/$planterId/friends');
       checkErrors(response);
       final friends = (response.data as List)
           .map((e) => PlanterFriend.fromJson(e as Map<String, dynamic>))
           .toList();
       return friends;
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -246,11 +275,13 @@ class HttpApi implements Api {
   @override
   Future<Activity> likeActivity(
       String planterId, String activityId, String token) async {
-    final response = await authenticatedClient(token).post(
-        '/secured/api/v1/planters/$planterId/activities/$activityId/like');
     try {
+      final response = await authenticatedClient(token).post(
+          '/secured/api/v1/planters/$planterId/activities/$activityId/like');
       checkErrors(response);
       return Activity.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -259,13 +290,15 @@ class HttpApi implements Api {
   @override
   Future<PlanterCheckIn> logPlanterCheckIn(
       String planterId, PlanterCheckIn checkIn, String token) async {
-    final response = await authenticatedClient(token).post(
-      '/secured/api/v1/planters/$planterId/checkins',
-      data: checkIn.toJson(),
-    );
     try {
+      final response = await authenticatedClient(token).post(
+        '/secured/api/v1/planters/$planterId/checkins',
+        data: checkIn.toJson(),
+      );
       checkErrors(response);
       return PlanterCheckIn.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -274,13 +307,15 @@ class HttpApi implements Api {
   @override
   Future<Planter> updatePlanter(
       String planterId, Planter planter, String token) async {
-    final response = await authenticatedClient(token).put(
-      '/secured/api/v1/planters/$planterId',
-      data: planter.toJson(),
-    );
     try {
+      final response = await authenticatedClient(token).put(
+        '/secured/api/v1/planters/$planterId',
+        data: planter.toJson(),
+      );
       checkErrors(response);
       return Planter.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -288,15 +323,15 @@ class HttpApi implements Api {
 
   @override
   Future<String> inviteFriend(String email, String name, String comment) async {
-    final response = await basicClient().post(
-      '/public/api/v1/planters/management/invite',
-      data: {
-        'email': email,
-        'name': name,
-        'invitationComment': comment,
-      },
-    );
     try {
+      final response = await basicClient().post(
+        '/public/api/v1/planters/management/invite',
+        data: {
+          'email': email,
+          'name': name,
+          'invitationComment': comment,
+        },
+      );
       checkErrors(response);
       if (response.data['isInvitationSent'] as bool) {
         return response.data['signupLink'] as String;
@@ -305,6 +340,8 @@ class HttpApi implements Api {
           message: 'Could not send invitation! Please retry',
         );
       }
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -312,13 +349,15 @@ class HttpApi implements Api {
 
   @override
   Future<LoginResponse> login(String username, String password) async {
-    final response = await basicClient().post(
-      '/public/api/v1/planters/management/login',
-      data: {'userName': username, 'password': password},
-    );
     try {
+      final response = await basicClient().post(
+        '/public/api/v1/planters/management/login',
+        data: {'userName': username, 'password': password},
+      );
       checkErrors(response);
       return LoginResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -326,17 +365,19 @@ class HttpApi implements Api {
 
   @override
   Future<String> signUp(String username, String password) async {
-    final response = await basicClient().post(
-      'signup',
-      data: {'userName': username, 'password': password},
-    );
     try {
+      final response = await basicClient().post(
+        'signup',
+        data: {'userName': username, 'password': password},
+      );
       checkErrors(response);
       if (response.data['isSuccessful'] as bool) {
         return response.data['signupLink'] as String;
       } else {
         throw const ApiException(message: 'Sign up failed! Please retry');
       }
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -345,14 +386,16 @@ class HttpApi implements Api {
   @override
   Future<List<Message>> fetchGroupMessages(
       String planterId, String messageGroupId) async {
-    final response = await authenticatedClient('').get(
-      '/planters/$planterId/chatGroups/$messageGroupId',
-    );
     try {
+      final response = await authenticatedClient('').get(
+        '/planters/$planterId/chatGroups/$messageGroupId',
+      );
       checkErrors(response);
       return (response.data as List ?? [])
           .map((e) => Message.fromJson(e as Map<String, dynamic>))
           .toList();
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -361,13 +404,15 @@ class HttpApi implements Api {
   @override
   Future<Message> sendMessageToGroup(
       Message message, String planterId, String messageGroupId) async {
-    final response = await authenticatedClient('').post(
-      '/planters/$planterId/chatGroups/$messageGroupId',
-      data: message.toJson(),
-    );
     try {
+      final response = await authenticatedClient('').post(
+        '/planters/$planterId/chatGroups/$messageGroupId',
+        data: message.toJson(),
+      );
       checkErrors(response);
       return Message.fromJson(response.data as Map<String, dynamic>);
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }
@@ -375,14 +420,16 @@ class HttpApi implements Api {
 
   @override
   Future<List<Chat>> fetchAllGroups(String planterId) async {
-    final response = await authenticatedClient('').get(
-      '/planters/$planterId/chatGroups',
-    );
     try {
+      final response = await authenticatedClient('').get(
+        '/planters/$planterId/chatGroups',
+      );
       checkErrors(response);
       return (response.data as List ?? [])
           .map((e) => Chat.fromJson(e as Map<String, dynamic>))
           .toList();
+    } on DioError {
+      throw const TimeoutException();
     } catch (e) {
       rethrow;
     }

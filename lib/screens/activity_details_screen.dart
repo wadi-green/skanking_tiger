@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 import '../api/api.dart';
 import '../core/colors.dart';
 import '../core/constants.dart';
+import '../core/hive_boxes.dart';
 import '../core/images.dart';
 import '../core/text_styles.dart';
 import '../data/activity/activity.dart';
@@ -142,32 +144,22 @@ class _ActivityDetails extends StatelessWidget {
             children: [
               IconButton(
                 tooltip: 'Add to my activities',
-                icon: const FaIcon(
-                  WadiGreenIcons.addActivity,
-                  color: MainColors.darkGrey,
+                icon: Consumer<AuthModel>(
+                  builder: (context, model, child) {
+                    final isAdded = model.user.activities.contains(activity.id);
+                    return FaIcon(
+                      WadiGreenIcons.addActivity,
+                      color:
+                          isAdded ? MainColors.lightGreen : MainColors.darkGrey,
+                    );
+                  },
                 ),
-                onPressed: () async {
-                  if (context.read<AuthModel>().isLoggedIn) {
-                    await context.read<Api>().logPlanterCheckIn(
-                          context.read<AuthModel>().user.id,
-                          PlanterCheckIn(
-                            activityId: activity.id,
-                            activityTitle: activity.title,
-                            activityStep: -1,
-                            checkinType: const CheckInActivityType(
-                                CheckInActivityType.newActivityStarted),
-                            comment: '${activity.id} started',
-                            timestamp: DateTime.now().toIso8601String(),
-                          ),
-                          context.read<AuthModel>().tokenData.accessToken,
-                        );
-                    // update planter in context
-                    final updatedPlanter = await context
-                        .read<Api>()
-                        .fetchPlanter(context.read<AuthModel>().user.id);
-                    context.read<AuthModel>().updateUser(updatedPlanter);
-                  } else {
+                onPressed: () {
+                  final authModel = context.read<AuthModel>();
+                  if (!authModel.isLoggedIn) {
                     Navigator.pushNamed(context, LogInScreen.route);
+                  } else if (!authModel.user.activities.contains(activity.id)) {
+                    addToMyActivities(context);
                   }
                 },
               ),
@@ -188,20 +180,24 @@ class _ActivityDetails extends StatelessWidget {
               IconButton(
                 tooltip: 'Like',
                 icon: Center(
-                  child: SvgPicture.asset(
-                    SvgImages.likeBold,
-                    width: 25,
-                    color: MainColors.darkGrey,
+                  child: ValueListenableBuilder<Box>(
+                    valueListenable:
+                        Hive.box(ActivityLikesBox.key).listenable(),
+                    builder: (context, box, child) {
+                      return SvgPicture.asset(
+                        SvgImages.likeBold,
+                        width: 25,
+                        color: box.containsKey(activity.id)
+                            ? MainColors.lightGreen
+                            : MainColors.darkGrey,
+                      );
+                    },
                   ),
                 ),
                 alignment: Alignment.topCenter,
-                onPressed: () async {
+                onPressed: () {
                   if (context.read<AuthModel>().isLoggedIn) {
-                    await context.read<Api>().likeActivity(
-                          context.read<AuthModel>().user.id,
-                          activity.id,
-                          context.read<AuthModel>().tokenData.accessToken,
-                        );
+                    addToLikes(context);
                   } else {
                     Navigator.pushNamed(context, LogInScreen.route);
                   }
@@ -211,6 +207,54 @@ class _ActivityDetails extends StatelessWidget {
           ),
         ],
       );
+
+  Future<void> addToLikes(BuildContext context) async {
+    try {
+      if (context.read<AuthModel>().isLoggedIn) {
+        await context.read<Api>().likeActivity(
+              context.read<AuthModel>().user.id,
+              activity.id,
+              context.read<AuthModel>().tokenData.accessToken,
+            );
+        ActivityLikesBox.triggerLike(activity.id);
+      } else {
+        Navigator.pushNamed(context, LogInScreen.route);
+      }
+    } catch (e, tr) {
+      debugPrint(tr.toString());
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  Future<void> addToMyActivities(BuildContext context) async {
+    try {
+      final authModel = context.read<AuthModel>();
+      await context.read<Api>().logPlanterCheckIn(
+            authModel.user.id,
+            PlanterCheckIn(
+              activityId: activity.id,
+              activityTitle: activity.title,
+              activityStep: -1,
+              checkinType: const CheckInActivityType(
+                  CheckInActivityType.newActivityStarted),
+              comment: '${activity.id} started',
+              timestamp: DateTime.now().toIso8601String(),
+            ),
+            authModel.tokenData.accessToken,
+          );
+      // update planter in context
+      final updatedPlanter =
+          await context.read<Api>().fetchPlanter(authModel.user.id);
+      authModel.updateUser(updatedPlanter);
+    } catch (e, tr) {
+      debugPrint(tr.toString());
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   Widget buildDescription(BuildContext context) => CustomCard(
         title: Strings.fullDescription,

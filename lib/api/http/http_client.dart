@@ -54,6 +54,10 @@ void checkErrors(Response response, [String errorMsg]) {
   debugPrint(response.data.toString());
   final code = response.data['code'] as int;
 
+  if (code == null && response.data is Map && response.data['status'] == 500) {
+    throw const ServerErrorException();
+  }
+
   /// We can use the error code to throw custom exceptions when needed
   switch (code) {
     case 500:
