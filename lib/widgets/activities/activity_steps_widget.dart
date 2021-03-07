@@ -96,10 +96,12 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
   }
 
   CustomStep buildStep(ActivityStep step) {
-    final isCompleted = _planterActivity != null &&
-        _planterActivity.completedSteps >= step.number;
-    final canComplete = _planterActivity != null &&
-        _planterActivity.completedSteps == step.number - 1;
+    /// Step numbers start from 0. So 1 completed step means step 0 is done, etc
+    final currentCompleted = (_planterActivity?.completedSteps ?? 0) - 1;
+    final isCompleted =
+        _planterActivity != null && currentCompleted >= step.number;
+    final canComplete =
+        _planterActivity != null && currentCompleted == step.number - 1;
     return CustomStep(
       isCompleted: isCompleted,
       icon: CircleAvatar(
