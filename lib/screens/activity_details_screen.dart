@@ -5,6 +5,7 @@ import '../api/api.dart';
 import '../core/constants.dart';
 import '../data/activity/activity.dart';
 import '../data/route_arguments.dart';
+import '../models/auth_model.dart';
 import '../utils/strings.dart';
 import '../widgets/activities/activity_header.dart';
 import '../widgets/activities/activity_stats_grid.dart';
@@ -72,7 +73,17 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
             cardsSpacer,
             buildDescription(activity),
             cardsSpacer,
-            ActivityStepsWidget(activity: activity),
+            Selector<AuthModel, bool>(
+              selector: (_, model) {
+                // Rebuilds the steps after accepting the activity
+                return model.user?.activities?.contains(activity.id) ?? false;
+              },
+              shouldRebuild: (prev, next) => prev != next,
+              builder: (_, recheckStatus, child) => ActivityStepsWidget(
+                key: ValueKey('${activity.id}_$recheckStatus'),
+                activity: activity,
+              ),
+            ),
             cardsSpacer,
             ActivityStatsGrid(activity: activity),
             cardsSpacer,
