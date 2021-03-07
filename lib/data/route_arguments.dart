@@ -12,7 +12,7 @@ class RouteArguments {
   /// Used to pass any type of data to the route resolver.
   /// In order to make everything consistent and easily maintainable, define
   /// the keys of the sent object as static constants inside the Screen widgets.
-  /// Example: [ActivityDetailsScreen.fetchActivityArg]
+  /// Example: [ActivityDetailsScreen.activityIdArg]
   final Map<String, dynamic> data;
 
   const RouteArguments({this.isMain = false, this.data = const {}});

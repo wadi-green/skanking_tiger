@@ -40,21 +40,19 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
   @override
   void initState() {
     super.initState();
-    final initialDate = DateTime.now();
-    _updateEvents(initialDate.month, initialDate.year);
+    _updateEvents(DateTime.now());
   }
 
-  void _updateEvents(int month, int year) {
+  void _updateEvents(DateTime date) {
     final tokenData = context.read<AuthModel>().tokenData;
-    _future = context
-        .read<Api>()
-        .fetchPlanterCheckIns(widget.planter.id, month, year, tokenData.accessToken);
+    _future = context.read<Api>().fetchPlanterCheckIns(
+        widget.planter.id, date.month, date.year, tokenData.accessToken);
     _future.then((events) {
       setState(() {
         _selectedMonthEvents
           ..clear()
           ..addAll(events);
-        _selectedDayEvents.clear();
+        _calendarController.setSelectedDay(date, runCallback: true);
       });
     });
   }
@@ -78,8 +76,9 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
           },
           onVisibleDaysChanged: (first, last, _) {
             // Guaranteed to be inside the visible month
-            final date = first.add(const Duration(days: 12));
-            _updateEvents(date.month, date.year);
+            final day = first.add(const Duration(days: 12));
+            _updateEvents(DateTime(day.year, day.month));
+            // To show the loading state
             setState(() {});
           },
           onDaySelected: (day, _, __) {
@@ -156,10 +155,16 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
             ],
           ),
           const SizedBox(height: 2),
-          Text(
-            event.comment ?? Strings.noComments,
-            style: shortDescriptionCaption(context),
-          ),
+          if (event.comment != null && event.comment.isNotEmpty)
+            Text(
+              event.comment ?? Strings.noComments,
+              style: shortDescriptionCaption(context),
+            )
+          else
+            Text(
+              Strings.noComments,
+              style: shortDescriptionCaption(context),
+            ),
         ],
       ),
     );
@@ -184,8 +189,8 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
             const SizedBox(height: 12),
             OutlineButton.icon(
               onPressed: () {
-                _updateEvents(_calendarController.selectedDay.month,
-                    _calendarController.selectedDay.year);
+                _updateEvents(_calendarController.selectedDay);
+                // To show the loading
                 setState(() {});
               },
               icon: const Icon(Icons.refresh),

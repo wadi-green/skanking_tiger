@@ -37,8 +37,7 @@ Widget _resolveDestination(String routeName, RouteArguments args) {
     case ActivityDetailsScreen.route:
       return ActivityDetailsScreen(
         isMain: args.isMain,
-        fetchActivityCallback: args.data[ActivityDetailsScreen.fetchActivityArg]
-            as FetchActivityCallback,
+        activityId: args.data[ActivityDetailsScreen.activityIdArg] as String,
       );
     case DashboardScreen.route:
       return DashboardScreen(isMain: args.isMain);

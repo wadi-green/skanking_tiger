@@ -175,21 +175,24 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
     Navigator.pop(context);
     showLoadingDialog();
     try {
+      final authModel = context.read<AuthModel>();
+      final comment =
+          _commentController.text == null || _commentController.text.isEmpty
+              ? 'Step ${step.number} completed'
+              : _commentController.text;
       final result = await context.read<Api>().logPlanterCheckIn(
-            context.read<AuthModel>().user.id,
+            authModel.user.id,
             PlanterCheckIn(
               activityId: widget.activity.id,
               activityTitle: widget.activity.title,
               activityStep: step.number,
-              checkinType: CheckInActivityType(
-                step.number == 1
-                    ? CheckInActivityType.newActivityStarted
-                    : CheckInActivityType.activityProgressUpdate,
+              checkinType: const CheckInActivityType(
+                CheckInActivityType.activityProgressUpdate,
               ),
-              comment: _commentController.text,
+              comment: comment,
               timestamp: DateTime.now().toIso8601String(),
             ),
-            context.read<AuthModel>().tokenData.accessToken,
+            authModel.tokenData.accessToken,
           );
       _commentController.clear();
       setState(() {
@@ -199,6 +202,10 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
         );
       });
       Navigator.pop(context);
+      // update planter in context
+      context.read<Api>().fetchPlanter(authModel.user.id).then((value) {
+        authModel.updateUser(value);
+      });
     } catch (e) {
       setState(() => _error = e.toString());
       Navigator.pop(context);

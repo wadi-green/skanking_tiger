@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../api/api.dart';
 import '../../core/text_styles.dart';
-import '../../data/activity/activity.dart';
 import '../../data/activity/base_activity.dart';
 import '../../data/route_arguments.dart';
 import '../../screens/activity_details_screen.dart';
@@ -70,19 +67,7 @@ class CompactActivitiesList extends StatelessWidget {
         Navigator.of(context).pushNamed(
           ActivityDetailsScreen.route,
           arguments: RouteArguments(
-            data: {
-              ActivityDetailsScreen.fetchActivityArg: () {
-                if (activity is Activity) {
-                  // Here we already have the full activity object, so we
-                  // directly return it
-                  return Future<Activity>.value(activity);
-                } else {
-                  // Here we have one of the other representations of an
-                  // activity so we need to fetch the full one
-                  return context.read<Api>().fetchActivity(activity.id);
-                }
-              },
-            },
+            data: {ActivityDetailsScreen.activityIdArg: activity.id},
           ),
         );
       },

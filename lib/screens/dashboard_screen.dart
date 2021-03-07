@@ -144,9 +144,12 @@ class DashboardScreen extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ActivityStatsWidget(
-            title: Strings.karma,
-            stat: user.karma,
+          child: Selector<AuthModel, int>(
+            selector: (context, model) => model.user?.karma,
+            builder: (context, karma, _) => ActivityStatsWidget(
+              title: Strings.karma,
+              stat: karma,
+            ),
           ),
         ),
         Expanded(

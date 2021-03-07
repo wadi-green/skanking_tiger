@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'api/api.dart';
 import 'api/http/http_api.dart';
 import 'core/hive_boxes.dart';
+import 'models/activities_repository.dart';
 import 'models/auth_model.dart';
 import 'my_app.dart';
 
@@ -26,6 +27,9 @@ Future<void> main() async {
         ChangeNotifierProvider<AuthModel>(
           create: (_) => AuthModel(),
           lazy: false,
+        ),
+        ChangeNotifierProvider<ActivitiesRepository>(
+          create: (_) => ActivitiesRepository(),
         ),
         apiProvider,
       ],

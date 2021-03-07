@@ -68,11 +68,9 @@ class _MyActivitiesListState extends State<MyActivitiesList> {
         onTap: () {
           Navigator.of(context).pushNamed(
             ActivityDetailsScreen.route,
-            arguments: RouteArguments(data: {
-              ActivityDetailsScreen.fetchActivityArg: () {
-                return context.read<Api>().fetchActivity(activity.id);
-              }
-            }),
+            arguments: RouteArguments(
+              data: {ActivityDetailsScreen.activityIdArg: activity.id},
+            ),
           );
         },
       );

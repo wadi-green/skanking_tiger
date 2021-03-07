@@ -78,10 +78,9 @@ class _MostLikedActivitiesGridState extends State<MostLikedActivitiesGrid> {
               Navigator.pushNamed(
                 context,
                 ActivityDetailsScreen.route,
-                arguments: RouteArguments(data: {
-                  ActivityDetailsScreen.fetchActivityArg: () =>
-                      Future<Activity>.value(activity),
-                }),
+                arguments: RouteArguments(
+                  data: {ActivityDetailsScreen.activityIdArg: activity.id},
+                ),
               );
             },
           );
