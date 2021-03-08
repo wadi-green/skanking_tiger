@@ -52,14 +52,16 @@ class ActivityHeader extends StatelessWidget {
           children: [
             Consumer<AuthModel>(
               builder: (context, model, child) {
-                final isAdded = model.user.activities.contains(activity.id);
+                final isStarted =
+                    model.user?.activities?.contains(activity.id) ?? false;
+                final showNudgeArrow = model.isLoggedIn && !isStarted;
                 final btn = IconButton(
                   tooltip: 'Add to my activities',
                   color: Colors.white,
                   icon: FaIcon(
                     WadiGreenIcons.addActivity,
                     color:
-                        isAdded ? MainColors.lightGreen : MainColors.darkGrey,
+                        isStarted ? MainColors.lightGreen : MainColors.darkGrey,
                   ),
                   onPressed: () {
                     final authModel = context.read<AuthModel>();
@@ -71,7 +73,7 @@ class ActivityHeader extends StatelessWidget {
                     }
                   },
                 );
-                return isAdded ? btn : _StartActivityNudge(button: btn);
+                return showNudgeArrow ? _StartActivityNudge(button: btn) : btn;
               },
             ),
             IconButton(
