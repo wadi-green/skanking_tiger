@@ -36,23 +36,26 @@ class _FriendsActivitiesListState extends State<FriendsActivitiesList> {
       title: Strings.friendsActivities,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 150),
-          child: AdvancedFutureBuilder<List<PlanterFriend>>(
-            future: _future,
-            builder: (friends) => Column(children: [
+        AdvancedFutureBuilder<List<PlanterFriend>>(
+          future: _future,
+          builder: (friends) => Column(children: [
+            if (friends.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 12, top: 4),
+                child: Text("Your friends didn't start any activity yet!"),
+              )
+            else
               for (final friend in friends) ...[
                 buildFriendTile(friend),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
               ]
-            ]),
-            onRefresh: () {
-              setState(() {
-                _future =
-                    context.read<Api>().fetchPlanterFriends(widget.planterId);
-              });
-            },
-          ),
+          ]),
+          onRefresh: () {
+            setState(() {
+              _future =
+                  context.read<Api>().fetchPlanterFriends(widget.planterId);
+            });
+          },
         ),
       ],
     );

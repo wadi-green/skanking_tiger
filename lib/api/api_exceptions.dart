@@ -26,3 +26,10 @@ class ServerErrorException implements Exception {
   @override
   String toString() => Strings.serverError500;
 }
+
+class TimeoutException implements Exception {
+  const TimeoutException();
+
+  @override
+  String toString() => Strings.timeoutException;
+}

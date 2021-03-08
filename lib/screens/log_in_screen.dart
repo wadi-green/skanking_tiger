@@ -19,10 +19,10 @@ class LogInScreen extends StatelessWidget {
         child: Padding(
           padding: wrapEdgeInsets,
           child: Column(
-            children: const [
-              SocialAuthentication(title: Strings.socialMediaLogin),
-              SizedBox(height: 12),
-              LoginForm(),
+            children: [
+              const SocialAuthentication(title: Strings.socialMediaLogin),
+              const SizedBox(height: 12),
+              LoginForm(isMain: isMain),
             ],
           ),
         ),

@@ -60,6 +60,7 @@ class Strings {
   static const activityCategories = 'Activity categories';
   static const popularHashtags = 'Popular hashtags';
   static const findAnActivity = 'Find an activity';
+  static const noResultsFound = 'No results were found...';
 
   /// Activity
   static const fullDescription = 'Full description';
@@ -108,6 +109,7 @@ class Strings {
   /// Member screen
   static const message = 'Message';
   static const viewPlants = 'View plants';
+  static const addFriend = 'Add friend';
 
   /// Invitation form
   static const inviteAFriend = 'Invite a friend';
@@ -123,7 +125,9 @@ class Strings {
   static const fullName = 'Full name';
   static const profilePhoto = 'Profile photo';
   static const aboutYourself = 'Tell us about yourself';
-  static const favoriteActivities = 'Favorite activities';
+  static const location = 'Location';
+  static const city = 'City';
+  static const chooseCountry = 'Choose a country';
   static const chooseActivity = 'Choose activity';
   static const accountSettings = 'Account settings';
   static const changePassword = 'Change password';
@@ -134,12 +138,17 @@ class Strings {
   static const closeAccountConfirmation =
       'Are you sure you want to close your account?';
   static const passwordChanged = 'Your password has been successfully updated';
+  static const favoriteActivities = 'Favorite Activities';
+  static const favoriteActivitiesHint = 'What kind of activities you like?';
+  static const preferences = 'Preferences';
+  static const languagesComingSoon = 'More language support coming soon';
 
   /// Messages
   static const noMessagesYet = 'No messages yet';
 
   /// API
   static const genericError = 'Something went wrong';
+  static const timeoutException = 'Connection timed out. Please retry';
   static const serverError500 =
       'Something broke in the backend, get in touch with ${AppConfig.supportEmail}';
 }

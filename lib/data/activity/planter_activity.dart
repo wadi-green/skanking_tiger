@@ -54,7 +54,9 @@ class PlanterActivity extends BaseActivity {
         activityTitle: checkIn.activityTitle,
         activityImage: activity.image,
         shortDescription: activity.shortDescription,
-        completedSteps: checkIn.activityStep,
+        // Step numbers start from 0. So completing step 0 means we have 1
+        // completed step, etc
+        completedSteps: checkIn.activityStep + 1,
         isComplete: checkIn.activityStep == activity.totalSteps,
         activityEase: activity.ease,
         activityLikes: activity.likes,

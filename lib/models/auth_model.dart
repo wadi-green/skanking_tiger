@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
 
 import '../core/app_config.dart';
+import '../core/hive_boxes.dart';
 import '../data/login_response.dart';
 import '../data/planter.dart';
 
@@ -55,6 +57,8 @@ class AuthModel extends ChangeNotifier {
     const storage = FlutterSecureStorage();
     await storage.delete(key: LocalKeys.authUser);
     await storage.delete(key: LocalKeys.tokenData);
+    // Delete saved likes
+    await Hive.box(ActivityLikesBox.key).clear();
   }
 
   Future<void> _restoreSavedData() async {

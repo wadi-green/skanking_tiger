@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:flutter/material.dart';
 
 import '../../core/app_config.dart';
 import '../api_exceptions.dart';
@@ -12,7 +11,8 @@ BaseOptions _requestOptions([String token]) {
     baseUrl: AppConfig.baseUrl,
     connectTimeout: 5000, // in milliseconds, so = 5 seconds
     receiveTimeout: 20000, // when downloading for example, also in milliseconds
-    headers: token == null ? null : {'api-key': token}, // the api-key authentication is done on server side
+    // the api-key authentication is done on server side
+    headers: token == null ? null : {'api-key': token},
     // Always check the response even if it's a 500 error
     validateStatus: (status) => true,
   );
@@ -50,17 +50,19 @@ void checkErrors(Response response, [String errorMsg]) {
     return;
   }
 
-  debugPrint(response.data.toString());
-  final code = response.data['code'] as int;
-
   /// We can use the error code to throw custom exceptions when needed
-  switch (code) {
+  switch (response.statusCode) {
     case 500:
       throw const ServerErrorException();
+    case 429:
+      throw ApiException(
+        message: 'You have reached your rate limit. Please try again later',
+        code: response.statusCode,
+      );
     default:
       throw ApiException(
         message: response.data['message'] as String,
-        code: code,
+        code: response.statusCode,
       );
   }
 }

@@ -10,19 +10,21 @@ class QuadrantBorderPainter extends CustomPainter {
   final bool bottomRight;
   final Color borderColor;
   final double borderWidth;
+  final double hMargin;
 
   QuadrantBorderPainter({
     this.topLeft = false,
     this.topRight = false,
     this.bottomLeft = false,
     this.bottomRight = false,
-    this.borderColor = MainColors.darkGrey,
+    this.borderColor = MainColors.grey,
     this.borderWidth = 1,
+    this.hMargin = 0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final w = size.width;
+    final w = size.width - hMargin * 2;
     final h = size.height;
 
     final paint = Paint()
@@ -32,37 +34,37 @@ class QuadrantBorderPainter extends CustomPainter {
 
     if (topLeft) {
       final topLeftPath = Path()
-        ..moveTo(0, h / 2)
-        ..lineTo(0, h / 4)
-        ..quadraticBezierTo(0, 0, h / 4, 0)
-        ..lineTo(w / 2, 0);
+        ..moveTo(hMargin, h / 2)
+        ..lineTo(hMargin, h / 4)
+        ..quadraticBezierTo(hMargin, 0, hMargin + h / 4, 0)
+        ..lineTo(hMargin + w / 2, 0);
       canvas.drawPath(topLeftPath, paint);
     }
 
     if (topRight) {
       final topRightPath = Path()
-        ..moveTo(w, h / 2)
-        ..lineTo(w, h / 4)
-        ..quadraticBezierTo(w, 0, w - (h / 4), 0)
-        ..lineTo(w / 2, 0);
+        ..moveTo(hMargin + w, h / 2)
+        ..lineTo(hMargin + w, h / 4)
+        ..quadraticBezierTo(hMargin + w, 0, hMargin + w - (h / 4), 0)
+        ..lineTo(hMargin + w / 2, 0);
       canvas.drawPath(topRightPath, paint);
     }
 
     if (bottomLeft) {
       final bottomLeftPath = Path()
-        ..moveTo(0, h / 2)
-        ..lineTo(0, h * 0.75)
-        ..quadraticBezierTo(0, h, h / 4, h)
-        ..lineTo(w / 2, h);
+        ..moveTo(hMargin, h / 2)
+        ..lineTo(hMargin, h * 0.75)
+        ..quadraticBezierTo(hMargin, h, hMargin + h / 4, h)
+        ..lineTo(hMargin + w / 2, h);
       canvas.drawPath(bottomLeftPath, paint);
     }
 
     if (bottomRight) {
       final bottomRightPath = Path()
-        ..moveTo(w, h / 2)
-        ..lineTo(w, h * 0.75)
-        ..quadraticBezierTo(w, h, w - (h / 4), h)
-        ..lineTo(w / 2, h);
+        ..moveTo(hMargin + w, h / 2)
+        ..lineTo(hMargin + w, h * 0.75)
+        ..quadraticBezierTo(hMargin + w, h, hMargin + w - (h / 4), h)
+        ..lineTo(hMargin + w / 2, h);
       canvas.drawPath(bottomRightPath, paint);
     }
   }

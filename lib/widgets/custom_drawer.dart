@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../core/app_config.dart';
 import '../core/colors.dart';
 import '../core/images.dart';
 import '../data/route_arguments.dart';
@@ -16,13 +18,12 @@ import '../screens/most_liked_activities_screen.dart';
 import '../screens/my_activities_screen.dart';
 import '../screens/personal_plant_screen.dart';
 import '../screens/profile_settings_screen.dart';
-import '../screens/report_bug_screen.dart';
 import '../screens/sign_up_screen.dart';
 import '../utils/strings.dart';
 import '../utils/wadi_green_icons.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer();
+  const CustomDrawer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +86,7 @@ class CustomDrawer extends StatelessWidget {
             MyActivitiesScreen.route),
         buildDrawerItem(Strings.inviteFriends, WadiGreenIcons.userDoc,
             InvitationFormScreen.route),
-        buildDrawerItem(Strings.reportABug, WadiGreenIcons.warning,
-            ReportBugScreen.route),
+        reportBugDrawerItem(),
         const SettingsDrawerTile(),
       ];
 
@@ -98,8 +98,7 @@ class CustomDrawer extends StatelessWidget {
             MostActivePlantersScreen.route),
         buildDrawerItem(Strings.signUp, WadiGreenIcons.add, SignUpScreen.route),
         buildDrawerItem(Strings.login, Icons.login, LogInScreen.route),
-        buildDrawerItem(Strings.reportABug, WadiGreenIcons.warning,
-            ReportBugScreen.route),
+        reportBugDrawerItem(),
       ];
 
   /// We're using the current route name to see if the drawer item should
@@ -119,6 +118,14 @@ class CustomDrawer extends StatelessWidget {
       ),
     );
   }
+
+  Widget reportBugDrawerItem() => DrawerTile(
+        title: Strings.reportABug,
+        icon: WadiGreenIcons.warning,
+        callback: () {
+          launch('mailto:${AppConfig.supportEmail}?subject=Bug%20Report');
+        },
+      );
 }
 
 /// A special drawer tile that can expand and collapse instead of navigating to

@@ -27,5 +27,5 @@ class BaseActivity extends Equatable {
   String get likesCompact => NumberFormat.compact().format(likes);
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, likes];
 }

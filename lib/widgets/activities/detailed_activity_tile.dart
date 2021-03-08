@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/api.dart';
 import '../../core/text_styles.dart';
 import '../../custom_painters/easiness_indicator_painter.dart';
-import '../../data/activity/activity.dart';
 import '../../data/activity/base_activity.dart';
 import '../../data/route_arguments.dart';
+import '../../models/activities_repository.dart';
 import '../../screens/activity_details_screen.dart';
 import '../../utils/strings.dart';
 import '../common.dart';
@@ -27,19 +26,7 @@ class DetailedActivityTile extends StatelessWidget {
         Navigator.of(context).pushNamed(
           ActivityDetailsScreen.route,
           arguments: RouteArguments(
-            data: {
-              ActivityDetailsScreen.fetchActivityArg: () {
-                if (activity is Activity) {
-                  // Here we already have the full activity object, so we
-                  // directly return it
-                  return Future<Activity>.value(activity as Activity);
-                } else {
-                  // Here we have one of the other representations of an
-                  // activity so we need to fetch the full one
-                  return context.read<Api>().fetchActivity(activity.id);
-                }
-              },
-            },
+            data: {ActivityDetailsScreen.activityIdArg: activity.id},
           ),
         );
       },
@@ -48,12 +35,15 @@ class DetailedActivityTile extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: AspectRatio(
-              aspectRatio: 0.7, // portrait image
-              child: CachedNetworkImage(
-                imageUrl: activity.image,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => loadingImagePlaceholder,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(2)),
+              child: AspectRatio(
+                aspectRatio: 0.7, // portrait image
+                child: CachedNetworkImage(
+                  imageUrl: activity.image,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => loadingImagePlaceholder,
+                ),
               ),
             ),
           ),
@@ -70,18 +60,26 @@ class DetailedActivityTile extends StatelessWidget {
                   style: shortDescriptionCaption(context),
                 ),
                 elementsSpacer,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      Strings.likes,
-                      style: detailedTileLabel(context),
-                    ),
-                    Text(
-                      '${activity.likes}',
-                      style: detailedTileValue(context),
-                    ),
-                  ],
+                Selector<ActivitiesRepository, BaseActivity>(
+                  selector: (context, repo) =>
+                      repo.latestActivityVersion(activity),
+                  shouldRebuild: (prev, next) {
+                    return prev.likes != next.likes;
+                  },
+                  builder: (context, activity, child) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      child,
+                      Text(
+                        '${activity.likes}',
+                        style: detailedTileValue(context),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    Strings.likes,
+                    style: detailedTileLabel(context),
+                  ),
                 ),
                 elementsSpacer,
                 Row(

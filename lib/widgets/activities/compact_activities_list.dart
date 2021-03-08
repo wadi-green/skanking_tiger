@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../api/api.dart';
-import '../../data/activity/activity.dart';
+import '../../core/text_styles.dart';
 import '../../data/activity/base_activity.dart';
 import '../../data/route_arguments.dart';
 import '../../screens/activity_details_screen.dart';
@@ -13,11 +11,13 @@ import '../custom_list_tile.dart';
 class CompactActivitiesList extends StatelessWidget {
   final List<BaseActivity> activities;
   final String title;
+  final String subtitle;
   final VoidCallback callback;
 
   const CompactActivitiesList({
     Key key,
     @required this.title,
+    this.subtitle,
     @required this.activities,
     this.callback,
   })  : assert(activities != null),
@@ -28,22 +28,32 @@ class CompactActivitiesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       title: title,
+      titleSpacing: 0,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
       children: [
-        for (final activity in activities) ...[
-          buildActivityTile(context, activity),
-          const SizedBox(height: 8),
-        ],
-        if (callback != null)
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: callback,
-              child: const Text(Strings.viewAll),
-            ),
+        if (activities.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Text(Strings.noResultsFound),
           )
-        else
+        else ...[
+          if (subtitle != null) Text(subtitle, style: searchSubtitle(context)),
           const SizedBox(height: 12),
+          for (final activity in activities) ...[
+            buildActivityTile(context, activity),
+            const SizedBox(height: 16),
+          ],
+          if (callback != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: callback,
+                child: const Text(Strings.viewAll),
+              ),
+            )
+          else
+            const SizedBox(height: 12),
+        ]
       ],
     );
   }
@@ -57,19 +67,7 @@ class CompactActivitiesList extends StatelessWidget {
         Navigator.of(context).pushNamed(
           ActivityDetailsScreen.route,
           arguments: RouteArguments(
-            data: {
-              ActivityDetailsScreen.fetchActivityArg: () {
-                if (activity is Activity) {
-                  // Here we already have the full activity object, so we
-                  // directly return it
-                  return Future<Activity>.value(activity);
-                } else {
-                  // Here we have one of the other representations of an
-                  // activity so we need to fetch the full one
-                  return context.read<Api>().fetchActivity(activity.id);
-                }
-              },
-            },
+            data: {ActivityDetailsScreen.activityIdArg: activity.id},
           ),
         );
       },

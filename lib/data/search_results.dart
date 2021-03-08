@@ -44,5 +44,5 @@ class SearchResults extends Equatable {
 
   @override
   List<Object> get props =>
-      [results, hashtags, categories, mostLikedActivities];
+      [results, hashtags, categories, mostLikedActivities, totalResults];
 }

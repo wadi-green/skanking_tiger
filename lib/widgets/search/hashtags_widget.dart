@@ -29,12 +29,8 @@ class HashtagsWidget extends StatelessWidget {
           spacing: 12,
           children: hashtags
               .map((h) => ActionChip(
-                    avatar: const Icon(
-                      Icons.close,
-                      color: MainColors.primary,
-                    ),
-                    backgroundColor: MainColors.white,
-                    label: Text(h),
+                    backgroundColor: MainColors.blue,
+                    label: Text(h, style: const TextStyle(color: Colors.white)),
                     onPressed: () => onPressed?.call(h),
                   ))
               .toList(),

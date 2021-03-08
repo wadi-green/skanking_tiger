@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +16,8 @@ import '../custom_card.dart';
 import 'auth_button.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key key}) : super(key: key);
+  final bool isMain;
+  const LoginForm({Key key, @required this.isMain}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -159,11 +159,15 @@ class _LoginFormState extends State<LoginForm> {
             await api.login(emailController.text, passController.text);
         final planter = await api.fetchPlanter(response.planterId);
         context.read<AuthModel>().login(response, planter, persist: rememberMe);
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          DashboardScreen.route,
-          (route) => false,
-          arguments: const RouteArguments(isMain: true),
-        );
+        if (widget.isMain) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            DashboardScreen.route,
+            (route) => false,
+            arguments: const RouteArguments(isMain: true),
+          );
+        } else {
+          Navigator.pop(context);
+        }
       } catch (e) {
         Scaffold.of(context)
           ..removeCurrentSnackBar()

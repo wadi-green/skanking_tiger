@@ -55,7 +55,7 @@ class Activity extends BaseActivity {
         );
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, likes, followers];
 
   factory Activity.fromJson(Map<String, dynamic> json) => Activity(
         id: json['id'] as String,

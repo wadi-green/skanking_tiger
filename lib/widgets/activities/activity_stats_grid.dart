@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants.dart';
 import '../../custom_painters/easiness_indicator_painter.dart';
 import '../../data/activity/activity.dart';
+import '../../models/activities_repository.dart';
 import '../../utils/strings.dart';
 import '../custom_card.dart';
 import 'activity_stats_widget.dart';
@@ -71,18 +73,26 @@ class _ActivityStatsGridState extends State<ActivityStatsGrid> {
       children: [
         Expanded(child: leftColBuilder()),
         Expanded(
-          child: Column(
-            key: rightColKey,
-            children: [
-              ActivityStatsWidget(
-                title: Strings.likes,
-                stat: widget.activity.likes,
-              ),
-              ActivityStatsWidget(
-                title: Strings.follows,
-                stat: widget.activity.followers,
-              ),
-            ],
+          child: Selector<ActivitiesRepository, Activity>(
+            selector: (context, repo) =>
+                repo.latestActivityVersion(widget.activity) as Activity,
+            shouldRebuild: (prev, next) {
+              return prev.likes != next.likes ||
+                  prev.followers != next.followers;
+            },
+            builder: (context, activity, child) => Column(
+              key: rightColKey,
+              children: [
+                ActivityStatsWidget(
+                  title: Strings.likes,
+                  stat: activity.likes,
+                ),
+                ActivityStatsWidget(
+                  title: Strings.follows,
+                  stat: activity.followers,
+                ),
+              ],
+            ),
           ),
         ),
       ],

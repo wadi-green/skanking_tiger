@@ -46,15 +46,12 @@ class _DetailedActivitiesListState extends State<DetailedActivitiesList> {
       title: widget.title,
       padding: innerEdgeInsets,
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 500),
-          child: AdvancedFutureBuilder<List<BaseActivity>>(
-            future: _activities,
-            builder: buildActivitiesList,
-            onRefresh: () => setState(() {
-              _activities = widget.fetchActivitiesCallback();
-            }),
-          ),
+        AdvancedFutureBuilder<List<BaseActivity>>(
+          future: _activities,
+          builder: buildActivitiesList,
+          onRefresh: () => setState(() {
+            _activities = widget.fetchActivitiesCallback();
+          }),
         ),
         if (widget.onViewAll != null)
           Align(
@@ -71,11 +68,14 @@ class _DetailedActivitiesListState extends State<DetailedActivitiesList> {
   }
 
   Widget buildActivitiesList(List<BaseActivity> activities) {
+    if (activities.isEmpty) {
+      return const Text('No activities yet!');
+    }
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: activities.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
       itemBuilder: (_, i) => DetailedActivityTile(activity: activities[i]),
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/api.dart';
-import '../../api/api_exceptions.dart';
 import '../../core/colors.dart';
 import '../../core/constants.dart';
 import '../../data/activity/activity.dart';
@@ -47,34 +46,28 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
   Future<void> _checkActivityStatus() async {
     final currentPlanter = context.read<AuthModel>().user;
     final tokenData = context.read<AuthModel>().tokenData;
-    if (currentPlanter == null || !currentPlanter.activities.contains(widget.activity.id)) {
+    if (currentPlanter == null ||
+        !currentPlanter.activities.contains(widget.activity.id)) {
       // Do nothing for guest users
       return;
     }
     setState(() => _isLoading = true);
     try {
-      final result = await context
-          .read<Api>()
-          .fetchPlanterActivity(currentPlanter.id, widget.activity.id, tokenData.accessToken);
+      final result = await context.read<Api>().fetchPlanterActivity(
+          currentPlanter.id, widget.activity.id, tokenData.accessToken);
       _planterActivity = result;
     } catch (e) {
-      if (e is ApiException && e.code == 404) {
-        // The planter doesn't have records for this activity, so they can
-        // start with the first step
-        _planterActivity = PlanterActivity.fromNewActivity(widget.activity);
-      } else {
-        Scaffold.of(context)
-          ..removeCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            content: Text(e.toString()),
-            duration: const Duration(seconds: 5),
-            action: SnackBarAction(
-              label: Strings.retry,
-              textColor: Colors.white,
-              onPressed: _checkActivityStatus,
-            ),
-          ));
-      }
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(e.toString()),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: Strings.retry,
+            textColor: Colors.white,
+            onPressed: _checkActivityStatus,
+          ),
+        ));
     }
     setState(() => _isLoading = false);
   }
@@ -103,10 +96,12 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
   }
 
   CustomStep buildStep(ActivityStep step) {
-    final isCompleted = _planterActivity != null &&
-        _planterActivity.completedSteps >= step.number;
-    final canComplete = _planterActivity != null &&
-        _planterActivity.completedSteps == step.number - 1;
+    /// Step numbers start from 0. So 1 completed step means step 0 is done, etc
+    final currentCompleted = (_planterActivity?.completedSteps ?? 0) - 1;
+    final isCompleted =
+        _planterActivity != null && currentCompleted >= step.number;
+    final canComplete =
+        _planterActivity != null && currentCompleted == step.number - 1;
     return CustomStep(
       isCompleted: isCompleted,
       icon: CircleAvatar(
@@ -182,21 +177,24 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
     Navigator.pop(context);
     showLoadingDialog();
     try {
+      final authModel = context.read<AuthModel>();
+      final comment =
+          _commentController.text == null || _commentController.text.isEmpty
+              ? 'Step ${step.number} completed'
+              : _commentController.text;
       final result = await context.read<Api>().logPlanterCheckIn(
-            context.read<AuthModel>().user.id,
+            authModel.user.id,
             PlanterCheckIn(
               activityId: widget.activity.id,
               activityTitle: widget.activity.title,
               activityStep: step.number,
-              checkinType: CheckInActivityType(
-                step.number == 1
-                    ? CheckInActivityType.newActivityStarted
-                    : CheckInActivityType.activityProgressUpdate,
+              checkinType: const CheckInActivityType(
+                CheckInActivityType.activityProgressUpdate,
               ),
-              comment: _commentController.text,
+              comment: comment,
               timestamp: DateTime.now().toIso8601String(),
             ),
-            context.read<AuthModel>().tokenData.accessToken,
+            authModel.tokenData.accessToken,
           );
       _commentController.clear();
       setState(() {
@@ -206,6 +204,10 @@ class _ActivityStepsWidgetState extends State<ActivityStepsWidget> {
         );
       });
       Navigator.pop(context);
+      // update planter in context
+      context.read<Api>().fetchPlanter(authModel.user.id).then((value) {
+        authModel.updateUser(value);
+      });
     } catch (e) {
       setState(() => _error = e.toString());
       Navigator.pop(context);

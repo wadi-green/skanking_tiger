@@ -30,11 +30,16 @@ class CustomListTile extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                placeholder: (_, __) => loadingImagePlaceholder,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(2)),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  placeholder: (_, __) => loadingImagePlaceholder,
+                  alignment: Alignment.topCenter,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

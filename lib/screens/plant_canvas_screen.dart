@@ -8,6 +8,7 @@ import '../core/constants.dart';
 import '../core/text_styles.dart';
 import '../data/plant.dart';
 import '../data/planter_canvas.dart';
+import '../models/auth_model.dart';
 import '../utils/strings.dart';
 import '../widgets/advanced_future_builder.dart';
 import '../widgets/common.dart';
@@ -38,42 +39,74 @@ class _PlantCanvasScreenState extends State<PlantCanvasScreen> {
   @override
   void initState() {
     super.initState();
-    _future = context.read<Api>().fetchPlanterCanvas(widget.planterId);
+    // TODO uncomment when plants are available
+    // _future = context.read<Api>().fetchPlanterCanvas(widget.planterId);
   }
 
   @override
   Widget build(BuildContext context) {
     return WadiScaffold(
       hasDrawer: widget.isMain,
-      body: CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(child: SizedBox(height: vPadding)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: hEdgeInsets,
-              child: CustomCard(
-                title: Strings.plants,
-                padding: innerEdgeInsets,
-                children: [
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(minHeight: 150),
-                    child: AdvancedFutureBuilder<PlanterCanvas>(
-                      future: _future,
-                      builder: buildCanvas,
-                      onRefresh: () => setState(() {
-                        _future = context
-                            .read<Api>()
-                            .fetchPlanterCanvas(widget.planterId);
-                      }),
-                    ),
+      body: Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Plants are coming soon. Stay tuned!',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+            const SizedBox(height: 24),
+            Selector<AuthModel, String>(
+              selector: (context, model) => model.user.id,
+              builder: (context, currentUserId, child) {
+                return currentUserId == widget.planterId
+                    ? Text(
+                        'Meanwhile, interact with more activities to slowly '
+                        'build your plants',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      )
+                    : const SizedBox();
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // TODO use this function as the body to restore plants
+  Widget buildOriginalScreen() {
+    return CustomScrollView(
+      slivers: [
+        const SliverToBoxAdapter(child: SizedBox(height: vPadding)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: hEdgeInsets,
+            child: CustomCard(
+              title: Strings.plants,
+              padding: innerEdgeInsets,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 150),
+                  child: AdvancedFutureBuilder<PlanterCanvas>(
+                    future: _future,
+                    builder: buildCanvas,
+                    onRefresh: () => setState(() {
+                      _future = context
+                          .read<Api>()
+                          .fetchPlanterCanvas(widget.planterId);
+                    }),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: vPadding)),
-        ],
-      ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: vPadding)),
+      ],
     );
   }
 

@@ -33,10 +33,24 @@ class WadiScaffold extends StatelessWidget {
           if (isLoggedIn &&
               ModalRoute.of(context).settings.name != NotificationsScreen.route)
             IconButton(
-              icon: SvgPicture.asset(
-                SvgImages.bell,
-                width: 20,
-                color: MainColors.darkGrey,
+              icon: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  SvgPicture.asset(
+                    SvgImages.bell,
+                    width: 20,
+                    color: MainColors.darkGrey,
+                  ),
+                  Container(
+                    width: 6,
+                    height: 6,
+                    margin: const EdgeInsets.only(right: 1),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
               ),
               onPressed: () {
                 Navigator.pushNamed(context, NotificationsScreen.route);
