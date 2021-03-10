@@ -2,17 +2,21 @@
 
 ![](https://www.wadi.green/images/big.png)
 
+![GitHub Repo stars](https://img.shields.io/github/stars/wadi-green/skanking_tiger?style=plastic)
+![GitHub Repo stars](https://img.shields.io/tokei/lines/github/wadi-green/skanking_tiger?style=plastic)
 
-## How it works
+# What is all this about
 
 The aim is to provide people with a plateform where they can teach & learn about different sustainable life-styles that everyone around the world are accustomed to.
+
+# How the app works
 
 1. Go through the search 🔍 page and try searching for a topic that interests you e.g `plastic`, `pollution` or `energy`
 2. Found what you were looking for? Time to get your hands dirty. Sign-up with the app, , read the steps and start working 🤟 ! 
 3. Each step has points that add to your karma points, do more, earn more karma ! 💯
 4. Have another brilliant idea to share with others 🤝 ? Tell us and we will add it to our [Activities](https://github.com/wadi-green/Wadi.Green/wiki/Activities), send an email to support@wadi.green ✉️
 
-# Want to contribute ?
+# Want to beomce a contributor ?
 
 ### Current state
 
