@@ -17,7 +17,7 @@ The aim is to provide people with a plateform where they can teach & learn about
 ### Current state
 
 - The entire infrastructure is built 🔨, managed & financed 💰 by [me](https://github.com/MSaifAsif) in my free time. 
-- The existing activities so far have been contributed by people from over 6 countries. 
+- The existing activities so far have been contributed generously by people from all over the world 
 
 ### How to help
 
