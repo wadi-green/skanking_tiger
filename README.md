@@ -17,7 +17,8 @@ The aim is to provide people with a plateform where they can teach & learn about
 This project is a starting point for a Flutter application.
 
 ```
+[~]$ git clone https://github.com/wadi-green/skanking_tiger.git
+[~]$ cd skanking_tiger/
 [~]$ flutter pub get
 [~]$ flutter run
-
 ```
