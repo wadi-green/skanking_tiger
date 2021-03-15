@@ -3,7 +3,10 @@
 ![](https://www.wadi.green/images/big.png)
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/wadi-green/skanking_tiger?style=plastic)
-![GitHub Repo stars](https://img.shields.io/tokei/lines/github/wadi-green/skanking_tiger?style=plastic)
+![Github lines of code](https://img.shields.io/tokei/lines/github/wadi-green/skanking_tiger?style=plastic)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/wadi-green/skanking_tiger)
+![Maintaner](https://img.shields.io/badge/maintainer-Saif-blue)
+[![Website monip.org](https://img.shields.io/website-up-down-green-red/http/monip.org.svg)](https://wadi.green/)
 
 # What is all this about
 
