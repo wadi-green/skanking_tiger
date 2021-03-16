@@ -32,7 +32,7 @@ class ExternalLinksWidget extends StatelessWidget {
             ),
             onTap: () async {
               if (await canLaunch(link)) {
-                launch(link);
+                launch(link, forceWebView: true, enableJavaScript: true);
               } else {
                 Scaffold.of(context)
                   ..removeCurrentSnackBar()
