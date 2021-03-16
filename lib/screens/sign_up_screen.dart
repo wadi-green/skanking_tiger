@@ -20,7 +20,7 @@ class SignUpScreen extends StatelessWidget {
           padding: wrapEdgeInsets,
           child: Column(
             children: const [
-              SocialAuthentication(title: Strings.socialMediaSignUp),
+              // SocialAuthentication(title: Strings.socialMediaSignUp),
               SizedBox(height: 12),
               SignUpForm(),
             ],
