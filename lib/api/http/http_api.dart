@@ -367,12 +367,13 @@ class HttpApi implements Api {
   Future<String> signUp(String username, String password) async {
     try {
       final response = await basicClient().post(
-        'signup',
-        data: {'userName': username, 'password': password},
+        '/public/api/v1/planters/management/register',
+        data: {'email': username, 'password': password},
       );
       checkErrors(response);
-      if (response.data['isSuccessful'] as bool) {
-        return response.data['signupLink'] as String;
+      print(response);
+      if (response.data['successful'] as bool) {
+        return response.data['message'] as String;
       } else {
         throw const ApiException(message: 'Sign up failed! Please retry');
       }
