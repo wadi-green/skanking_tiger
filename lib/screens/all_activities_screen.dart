@@ -27,7 +27,7 @@ class AllActivitiesScreen extends StatelessWidget {
               child: DetailedActivitiesList(
                 title: Strings.allActivities,
                 fetchActivitiesCallback: () {
-                  return context.read<Api>().fetchActivities(sortedBy: 'likes', limit: 150, keyword: query);
+                  return context.read<Api>().fetchActivities(sortedBy: 'likes', limit: 50, keyword: query);
                 },
               ),
             ),
