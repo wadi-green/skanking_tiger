@@ -12,6 +12,16 @@
 
 The aim is to provide people with a plateform where they can teach & learn about different sustainable life-styles that everyone around the world are accustomed to.
 
+# Current Releases
+
+| Version | Release Date          | Changes          |
+| ------- | ------------------ |--------------|
+| Future   |  ||
+| 1.0.2   | 17 - March 2021                |Public Release with performance fixes|
+| 1.0.1   | 09 - March 2021 |Beta release for internal testing|
+| 1.0.0   | 01 - March 2021                |Pre-release pilot|
+
+
 # How the app works
 
 1. Go through the search 🔍 page and try searching for a topic that interests you e.g `plastic`, `pollution` or `energy`
