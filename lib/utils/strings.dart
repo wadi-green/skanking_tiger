@@ -59,7 +59,7 @@ class Strings {
   static const relatedHashtags = 'Related hashtags';
   static const activityCategories = 'Activity categories';
   static const popularHashtags = 'Popular hashtags';
-  static const findAnActivity = 'Find an activity';
+  static const findAnActivity = 'Search - Try typing pollution';
   static const noResultsFound = 'No results were found...';
 
   /// Activity
