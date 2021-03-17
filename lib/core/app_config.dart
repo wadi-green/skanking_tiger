@@ -14,4 +14,3 @@ class LocalKeys {
   static const authUser = 'authUser';
   static const tokenData = 'tokenData';
 }
-\
