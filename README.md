@@ -17,7 +17,7 @@ The aim is to provide people with a plateform where they can teach & learn about
 | Version | Release Date          | Changes          |
 | ------- | ------------------ |--------------|
 | Future   |  ||
-| 1.0.6   | 21 - March 2021 |Bugs that will gathered in [Milestone6](https://github.com/wadi-green/skanking_tiger/milestone/2) |
+| 1.0.6   | 28 - March 2021 |Bugs that will gathered in [Milestone6](https://github.com/wadi-green/skanking_tiger/milestone/2) |
 | 1.0.2   | 17 - March 2021                |Public Release with performance fixes|
 | 1.0.1   | 09 - March 2021 |Beta release for internal testing|
 | 1.0.0   | 01 - March 2021                |Pre-release pilot|
