@@ -22,22 +22,25 @@ class Strings {
   static const notifications = 'Notifications';
 
   /// Drawer
-  static const dashboard = 'Dashboard';
+  static const dashboard = 'Your Dashboard';
   static const home = 'Home';
-  static const activities = 'Activities';
-  static const friends = 'Friends';
-  static const personalPlant = 'Personal plant';
-  static const myActivities = 'My activities';
+  static const activities = 'Most Liked Activities';
+  static const friends = 'Friends Chat';
+  static const personalPlant = 'Personal Plant';
+  static const myActivities = 'My Activities';
   static const inviteFriends = 'Invite Friends';
+  static const proposeNewActivity = 'Propose an Activity';
+  static const aboutTheApp = 'About Wadi.Green';
   static const settings = 'Settings';
-  static const profileSettings = 'Profile settings';
-  static const logout = 'Log out';
+  static const profileSettings = 'Profile Settings';
+  static const logout = 'Log Out';
   static const planters = 'Planters';
   static const signUp = 'Sign Up';
   static const login = 'Log In';
 
   /// Landing
   static const mostLikedActivities = 'Most liked activities';
+  static const mostLikedActivitiesSubtext = 'Activities most popular with others';
   static const allActivities = 'All activities';
   static const mostActivePlanters = 'Most active planters';
   static const howItWorks = 'How it works';
@@ -53,13 +56,16 @@ class Strings {
   static const thankYouForReporting = 'Thank you for helping us improve this application!';
 
   /// Search
-  static const search = 'Search';
+  static const search = 'Search for a topic';
   static const searchError = 'Something went wrong. Please retry your search';
   static const activitiesList = 'Activities list';
-  static const relatedHashtags = 'Related hashtags';
+  static const relatedHashtags = 'Related tags';
+  static const relatedHashtagsSubtext = 'Keywords extracted from your search that relate to more activities';
   static const activityCategories = 'Activity categories';
-  static const popularHashtags = 'Popular hashtags';
-  static const findAnActivity = 'Search - Try typing pollution';
+  static const activityCategoriesSubtext = 'Major cluster of activities are in the following keywords';
+  static const popularHashtags = 'Popular tags';
+  static const popularHashtagsSubtext = 'The over-all top ranked keywords to search for';
+  static const findAnActivity = 'pollution, trash, energy etc ...';
   static const noResultsFound = 'No results were found...';
 
   /// Activity
@@ -138,7 +144,7 @@ class Strings {
   static const closeAccountConfirmation =
       'Are you sure you want to close your account?';
   static const passwordChanged = 'Your password has been successfully updated';
-  static const favoriteActivities = 'Favorite Activities';
+  static const favoriteActivities = 'Activities preferences';
   static const favoriteActivitiesHint = 'What kind of activities you like?';
   static const preferences = 'Preferences';
   static const languagesComingSoon = 'More language support coming soon';

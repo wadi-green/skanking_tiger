@@ -30,7 +30,8 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
-  final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _aboutController = TextEditingController();
   final _cityController = TextEditingController();
   final _favActivitiesController = TextEditingController();
@@ -45,7 +46,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   void initState() {
     super.initState();
     _user = context.read<AuthModel>().user;
-    _nameController.text = _user.fullName;
+    _firstNameController.text = _user.firstName;
+    _lastNameController.text = _user.lastName;
     _aboutController.text = _user.aboutMe;
     _favActivitiesController.text = _user.favoriteActivities;
     _country = countries.contains(_user.country) ? _user.country : null;
@@ -54,7 +56,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   @override
   void dispose() {
-    _nameController?.dispose();
+    _firstNameController?.dispose();
+    _lastNameController?.dispose();
     _aboutController?.dispose();
     _cityController?.dispose();
     _favActivitiesController?.dispose();
@@ -65,8 +68,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
+      setState(() async {
         _image = File(pickedFile.path);
+        final pathToImage = await context.read<Api>().uploadProfilePicture(
+              context.read<AuthModel>().user.id,
+              _image,
+              context.read<AuthModel>().tokenData.accessToken,
+            );
+        final updatedUser = _user.copyWith(
+          picture: '$pathToImage?date=${DateTime.now().millisecondsSinceEpoch}',
+        );
+        context.read<AuthModel>().updateUser(updatedUser);
+        _user = updatedUser;
       });
     } else {
       debugPrint('No image selected.');
@@ -75,7 +88,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   void resetFields() {
     FocusScope.of(context).requestFocus(_focusDismiss);
-    _nameController.text = _user.fullName;
+    _firstNameController.text = _user.firstName;
+    _lastNameController.text = _user.lastName;
     _aboutController.text = _user.aboutMe;
     setState(() {
       _image = null;
@@ -119,17 +133,25 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         title: Strings.basicInformation,
         padding: wrapEdgeInsets,
         children: [
-          AbsorbPointer(
-            child: TextFormField(
-              controller: _nameController,
-              keyboardType: TextInputType.name,
-              readOnly: true,
-              textCapitalization: TextCapitalization.words,
-              validator: (val) => Validators.required(val, Strings.fullName),
-              decoration: const InputDecoration(
-                hintText: Strings.fullName,
-                prefixIcon: Icon(WadiGreenIcons.userCircle, size: 18),
-              ),
+          TextFormField(
+            controller: _firstNameController,
+            keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.words,
+            validator: (val) => Validators.required(val, Strings.fullName),
+            decoration: const InputDecoration(
+              hintText: Strings.fullName,
+              prefixIcon: Icon(WadiGreenIcons.userCircle, size: 18),
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _lastNameController,
+            keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.words,
+            validator: (val) => Validators.required(val, Strings.fullName),
+            decoration: const InputDecoration(
+              hintText: Strings.fullName,
+              prefixIcon: Icon(WadiGreenIcons.userCircle, size: 18),
             ),
           ),
           const SizedBox(height: 12),
@@ -309,6 +331,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       try {
         await Future.delayed(const Duration(seconds: 2));
         final updatedUser = _user.copyWith(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
           aboutMe: _aboutController.text,
           city: _cityController.text,
           country: _country,

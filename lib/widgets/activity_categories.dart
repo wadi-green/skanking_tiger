@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/constants.dart';
+import '../core/text_styles.dart';
 import '../data/activity_category.dart';
 import '../utils/strings.dart';
 import 'custom_card.dart';
@@ -29,6 +30,11 @@ class ActivityCategories extends StatelessWidget {
       title: title,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       children: [
+        Text(
+          Strings.activityCategoriesSubtext,
+          style: searchSubtitle(context),
+        ),
+        const SizedBox(height: 12),
         GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,

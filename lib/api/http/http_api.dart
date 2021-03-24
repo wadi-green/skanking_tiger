@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 
@@ -256,6 +258,27 @@ class HttpApi implements Api {
   }
 
   @override
+  Future<String> uploadProfilePicture(
+      String planterId, File image, String token) async {
+    final FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path, filename: planterId)
+    });
+    try {
+      final response = await authenticatedClient(token).post(
+        '/secured/api/v1/planters/$planterId/uploadProfilePicture',
+        data: formData,
+      );
+      checkErrors(response);
+      final publicPathToImage = response.data as String;
+      return publicPathToImage;
+    } on DioError {
+      throw const TimeoutException();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<List<PlanterFriend>> fetchPlanterFriends(String planterId) async {
     try {
       final response =
@@ -371,7 +394,6 @@ class HttpApi implements Api {
         data: {'email': username, 'password': password},
       );
       checkErrors(response);
-      print(response);
       if (response.data['successful'] as bool) {
         return response.data['message'] as String;
       } else {

@@ -139,6 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
               title: Strings.relatedHashtags,
               hashtags: results.hashtags?.related ?? [],
               onPressed: resetSearch,
+              subtitle: Strings.relatedHashtagsSubtext,
             ),
             cardsSpacer,
           ],
@@ -153,6 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
           if (results.mostLikedActivities.isNotEmpty) ...[
             CompactActivitiesList(
               title: Strings.mostLikedActivities,
+              subtitle: Strings.mostLikedActivitiesSubtext,
               activities: results.mostLikedActivities,
               callback: () => Navigator.of(context).pushNamed(
                   MostLikedActivitiesScreen.route,
@@ -164,6 +166,7 @@ class _SearchScreenState extends State<SearchScreen> {
             title: Strings.popularHashtags,
             hashtags: results.hashtags?.popular ?? [],
             onPressed: resetSearch,
+              subtitle: Strings.popularHashtagsSubtext,
           ),
           const SizedBox(height: vPadding),
         ],

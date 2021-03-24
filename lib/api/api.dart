@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../data/activity/activity.dart';
 import '../data/activity/planter_activity.dart';
 import '../data/chat.dart';
@@ -31,6 +33,7 @@ abstract class Api {
   Future<List<PlanterNotification>> fetchPlanterNotifications(String planterId, String token);
   Future<Activity> likeActivity(String planterId, String activityId, String token);
   Future<PlanterFriend> addFriend(String planterId, String friendId, String token);
+  Future<String> uploadProfilePicture(String planterId, File image, String token);
 
   /// Search Requests
   Future<SearchResults> searchActivities({String keyword, int limit});

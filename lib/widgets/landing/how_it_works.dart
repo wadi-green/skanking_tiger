@@ -100,9 +100,9 @@ class _HowItWorksState extends State<HowItWorks> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      buildText('Step 1', iconWidth),
-                      buildText('Step 2', iconWidth),
-                      buildText('Step 3', iconWidth),
+                      buildText('Find an Activity', iconWidth),
+                      buildText('Do Steps', iconWidth),
+                      buildText('Earn Karma', iconWidth),
                     ],
                   ),
                 ],
