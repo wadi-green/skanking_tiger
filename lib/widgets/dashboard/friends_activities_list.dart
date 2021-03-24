@@ -27,7 +27,7 @@ class _FriendsActivitiesListState extends State<FriendsActivitiesList> {
   @override
   void initState() {
     super.initState();
-    _future = context.read<Api>().fetchPlanterFriends(widget.planterId);
+    _future = context.read<Api>().fetchPlanterFriends(widget.planterId, 4);
   }
 
   @override
@@ -53,7 +53,7 @@ class _FriendsActivitiesListState extends State<FriendsActivitiesList> {
           onRefresh: () {
             setState(() {
               _future =
-                  context.read<Api>().fetchPlanterFriends(widget.planterId);
+                  context.read<Api>().fetchPlanterFriends(widget.planterId, 4);
             });
           },
         ),

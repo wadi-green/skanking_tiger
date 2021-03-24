@@ -86,8 +86,10 @@ class CustomDrawer extends StatelessWidget {
             MyActivitiesScreen.route),
         buildDrawerItem(Strings.inviteFriends, WadiGreenIcons.userDoc,
             InvitationFormScreen.route),
-        reportBugDrawerItem(),
+        proposeNewActivitiyItem(),
+        aboutTheAppItem(),
         const SettingsDrawerTile(),
+        reportBugDrawerItem(),
       ];
 
   List<Widget> get guestDrawerItems => [
@@ -98,6 +100,8 @@ class CustomDrawer extends StatelessWidget {
             MostActivePlantersScreen.route),
         buildDrawerItem(Strings.signUp, WadiGreenIcons.add, SignUpScreen.route),
         buildDrawerItem(Strings.login, Icons.login, LogInScreen.route),
+        proposeNewActivitiyItem(),
+        aboutTheAppItem(),
         reportBugDrawerItem(),
       ];
 
@@ -124,6 +128,22 @@ class CustomDrawer extends StatelessWidget {
         icon: WadiGreenIcons.warning,
         callback: () {
           launch('mailto:${AppConfig.supportEmail}?subject=Bug%20Report');
+        },
+      );
+
+  Widget proposeNewActivitiyItem() => DrawerTile(
+        title: Strings.proposeNewActivity,
+        icon: WadiGreenIcons.addActivity,
+        callback: () {
+          launch('https://wadi.green/activity.html');
+        },
+      );
+
+  Widget aboutTheAppItem() => DrawerTile(
+        title: Strings.aboutTheApp,
+        icon: WadiGreenIcons.help,
+        callback: () {
+          launch('https://wadi.green/index.html');
         },
       );
 }

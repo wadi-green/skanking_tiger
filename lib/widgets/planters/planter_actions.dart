@@ -33,8 +33,10 @@ class _PlanterActionsState extends State<PlanterActions> {
   Future<void> initFriendshipStatus() async {
     try {
       final authModel = context.read<AuthModel>();
+      // todo : Directly fetch friend instead of all friends. Api is missing as of now
       final friends = await context.read<Api>().fetchPlanterFriends(
             authModel.user.id,
+            20
           );
       setState(() {
         _isFriend = friends.any((f) => f.id == widget.member.id);

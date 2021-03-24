@@ -70,6 +70,7 @@ class ActivityHeader extends StatelessWidget {
                     } else if (!authModel.user.activities
                         .contains(activity.id)) {
                       addToMyActivities(context);
+                      // show confetti
                     }
                   },
                 );

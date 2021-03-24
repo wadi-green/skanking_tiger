@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/colors.dart';
 import '../../core/images.dart';
@@ -100,11 +101,19 @@ class _HowItWorksState extends State<HowItWorks> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      buildText('Step 1', iconWidth),
-                      buildText('Step 2', iconWidth),
-                      buildText('Step 3', iconWidth),
+                      buildText('Find an Activity', iconWidth),
+                      buildText('Do Steps', iconWidth),
+                      buildText('Earn Karma', iconWidth),
                     ],
                   ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () =>
+                          launch('https://www.wadi.green/index.html'),
+                      child: const Text(Strings.readMore),
+                    ),
+                  )
                 ],
               );
             },

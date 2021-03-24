@@ -28,7 +28,7 @@ class MostActivePlantersScreen extends StatelessWidget {
                 fetchPlantersCallback: () {
                   return context
                       .read<Api>()
-                      .fetchPlanters(sortedBy: 'activity', limit: 4);
+                      .fetchPlanters(sortedBy: 'activity', limit: 10);
                 },
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../screens/sign_up_screen.dart';
 
-import '../../screens/log_in_screen.dart';
 import '../../utils/strings.dart';
 import '../custom_card.dart';
 
@@ -18,7 +18,7 @@ class LandingCallToAction extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(LogInScreen.route);
+              Navigator.of(context).pushNamed(SignUpScreen.route);
             },
             child: const Text(
               Strings.becomeAPlanter,
