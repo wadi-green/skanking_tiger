@@ -8,6 +8,7 @@ class Strings {
 
   /// Common
   static const viewAll = 'VIEW ALL';
+  static const readMore = 'FIND OUT MORE';
   static const retry = 'Retry';
   static const unauthorizedAccess = 'Unauthorized access';
   static const karma = 'Karma';
@@ -25,7 +26,7 @@ class Strings {
   static const dashboard = 'Your Dashboard';
   static const home = 'Home';
   static const activities = 'Most Liked Activities';
-  static const friends = 'Friends Chat';
+  static const friends = 'Friends';
   static const personalPlant = 'Personal Plant';
   static const myActivities = 'My Activities';
   static const inviteFriends = 'Invite Friends';
@@ -56,16 +57,17 @@ class Strings {
   static const thankYouForReporting = 'Thank you for helping us improve this application!';
 
   /// Search
-  static const search = 'Search for a topic';
+  static const search = 'Activities Search';
+  static const searchHelpText = 'Find activities related to emissions, pollution, energy, health';
   static const searchError = 'Something went wrong. Please retry your search';
   static const activitiesList = 'Activities list';
   static const relatedHashtags = 'Related tags';
-  static const relatedHashtagsSubtext = 'Keywords extracted from your search that relate to more activities';
+  static const relatedHashtagsSubtext = 'More topics that might interest you';
   static const activityCategories = 'Activity categories';
-  static const activityCategoriesSubtext = 'Major cluster of activities are in the following keywords';
+  static const activityCategoriesSubtext = 'Search result(s) belong to these categories';
   static const popularHashtags = 'Popular tags';
-  static const popularHashtagsSubtext = 'The over-all top ranked keywords to search for';
-  static const findAnActivity = 'pollution, trash, energy etc ...';
+  static const popularHashtagsSubtext = 'The over-all top ranked topics';
+  static const findAnActivity = 'topic, keyword or category ...';
   static const noResultsFound = 'No results were found...';
 
   /// Activity

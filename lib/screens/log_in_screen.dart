@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/constants.dart';
-import '../utils/strings.dart';
 import '../widgets/auth/login_form.dart';
-import '../widgets/auth/social_authentication.dart';
 import '../widgets/wadi_scaffold.dart';
 
 class LogInScreen extends StatelessWidget {

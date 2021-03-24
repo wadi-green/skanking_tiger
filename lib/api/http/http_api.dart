@@ -279,10 +279,11 @@ class HttpApi implements Api {
   }
 
   @override
-  Future<List<PlanterFriend>> fetchPlanterFriends(String planterId) async {
+  Future<List<PlanterFriend>> fetchPlanterFriends(
+      String planterId, int limit) async {
     try {
-      final response =
-          await basicClient().get('/public/api/v1/planters/$planterId/friends');
+      final response = await basicClient()
+          .get('/public/api/v1/planters/$planterId/friends?limit=$limit');
       checkErrors(response);
       final friends = (response.data as List)
           .map((e) => PlanterFriend.fromJson(e as Map<String, dynamic>))

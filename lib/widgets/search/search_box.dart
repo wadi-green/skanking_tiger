@@ -50,7 +50,7 @@ class _SearchBoxState extends State<SearchBox> {
               isDense: true,
               // keep the extra space under the input box to avoid spacing
               // changes when an error is displayed
-              helperText: '',
+              helperText: Strings.searchHelpText,
             ),
           ),
         ),

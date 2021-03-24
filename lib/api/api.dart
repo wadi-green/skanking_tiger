@@ -24,7 +24,7 @@ abstract class Api {
   Future<List<Planter>> fetchPlanters({String sortedBy, int limit, List<String> ids});
   Future<Planter> fetchPlanter(String planterId);
   Future<Planter> updatePlanter(String planterId, Planter planter, String token);
-  Future<List<PlanterFriend>> fetchPlanterFriends(String planterId);
+  Future<List<PlanterFriend>> fetchPlanterFriends(String planterId, int limit);
   Future<List<PlanterActivity>> fetchPlanterActivities(String planterId);
   Future<PlanterActivity> fetchPlanterActivity(String planterId, String activityId, String token);
   Future<PlanterCanvas> fetchPlanterCanvas(String planterId);

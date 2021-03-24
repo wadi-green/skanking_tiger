@@ -46,6 +46,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   void initState() {
     super.initState();
     _user = context.read<AuthModel>().user;
+    _image = File(_user.picture);
     _firstNameController.text = _user.firstName;
     _lastNameController.text = _user.lastName;
     _aboutController.text = _user.aboutMe;
@@ -168,9 +169,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                         const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
                     child: CircleAvatar(
                       radius: 24,
-                      backgroundImage: (_image == null
-                          ? CachedNetworkImageProvider(_user.picture)
-                          : FileImage(_image)) as ImageProvider,
+                      backgroundImage: FileImage(_image),
                     ),
                   ),
                 ),

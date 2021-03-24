@@ -38,6 +38,7 @@ class HashtagsWidget extends StatelessWidget {
               .map((h) => ActionChip(
                     backgroundColor: MainColors.blue,
                     elevation: 2,
+                    avatar: const Icon(Icons.search, color: MainColors.white),
                     shadowColor: MainColors.lightGreen,
                     label: Text(h, style: const TextStyle(color: Colors.white)),
                     onPressed: () => onPressed?.call(h),
