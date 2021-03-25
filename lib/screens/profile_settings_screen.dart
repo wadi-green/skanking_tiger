@@ -38,7 +38,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final _focusDismiss = FocusNode();
   // The user is saved here and used to restore original data on cancel
   Planter _user;
-  File _image;
   String _country;
   bool _isLoading = false;
 
@@ -46,7 +45,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   void initState() {
     super.initState();
     _user = context.read<AuthModel>().user;
-    _image = File(_user.picture);
     _firstNameController.text = _user.firstName;
     _lastNameController.text = _user.lastName;
     _aboutController.text = _user.aboutMe;
@@ -70,10 +68,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() async {
-        _image = File(pickedFile.path);
+        final File image = File(pickedFile.path);
         final pathToImage = await context.read<Api>().uploadProfilePicture(
               context.read<AuthModel>().user.id,
-              _image,
+              image,
               context.read<AuthModel>().tokenData.accessToken,
             );
         final updatedUser = _user.copyWith(
@@ -92,9 +90,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     _firstNameController.text = _user.firstName;
     _lastNameController.text = _user.lastName;
     _aboutController.text = _user.aboutMe;
-    setState(() {
-      _image = null;
-    });
   }
 
   @override
@@ -169,7 +164,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                         const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
                     child: CircleAvatar(
                       radius: 24,
-                      backgroundImage: FileImage(_image),
+                      backgroundImage:
+                          (CachedNetworkImageProvider(_user.picture)),
                     ),
                   ),
                 ),
