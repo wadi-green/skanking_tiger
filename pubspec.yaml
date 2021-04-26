@@ -22,30 +22,30 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   cached_network_image: ^3.0.0
   cupertino_icons: ^1.0.2
   dio: ^4.0.0
   equatable: ^2.0.0
+  flutter:
+    sdk: flutter
   flutter_secure_storage: ^4.1.0
-  flutter_svg: ^0.21.0+1
+  flutter_svg: ^0.22.0
   font_awesome_flutter: ^9.0.0
   hive: ^2.0.4
   hive_flutter: ^1.0.0
   image_picker: ^0.7.4
   intl: ^0.17.0
   provider: ^5.0.0
-  table_calendar: ^2.3.3
+  table_calendar: ^3.0.0
   url_launcher: ^6.0.3
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.9.0
   flutter_test:
     sdk: flutter
-  test: ^1.16.5
-  flutter_launcher_icons: ^0.9.0
-  mockito: ^5.0.5
   lint: ^1.5.3
+  mockito: ^5.0.5
+  test: ^1.16.5
 
 flutter_icons:
   android: "ic_launcher"
