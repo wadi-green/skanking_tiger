@@ -10,7 +10,7 @@
 
 # What is all this about
 
-The aim is to provide people with a plateform where they can teach & learn about different sustainable life-styles that everyone around the world are accustomed to.
+The aim is to provide people with a platform where they can teach & learn about different sustainable life-styles that everyone around the world are accustomed to.
 
 # Current Releases
 
@@ -40,7 +40,7 @@ The aim is to provide people with a plateform where they can teach & learn about
 ### How to help
 
 #### As a developer or designer ? 
-- I beleive in transparency. The entire app code base can be found at [Skanking Tiger](https://github.com/wadi-green/skanking_tiger)
+- I believe in transparency. The entire app code base can be found at [Skanking Tiger](https://github.com/wadi-green/skanking_tiger)
 - Some Projects have been created to organize tasks. Intention is to keep things organized in a kanban board style in one board and then move the issue to relevant project board
   - [Bugs](https://github.com/wadi-green/skanking_tiger/projects/2)
   - [General product backlog](https://github.com/wadi-green/Wadi.Green/projects/1)
