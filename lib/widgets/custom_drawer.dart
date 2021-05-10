@@ -135,7 +135,7 @@ class CustomDrawer extends StatelessWidget {
         title: Strings.proposeNewActivity,
         icon: WadiGreenIcons.addActivity,
         callback: () {
-          launch('https://wadi.green/activity.html');
+          launch('https://wadi.green/landing_page/activity.html');
         },
       );
 
@@ -143,7 +143,7 @@ class CustomDrawer extends StatelessWidget {
         title: Strings.aboutTheApp,
         icon: WadiGreenIcons.help,
         callback: () {
-          launch('https://wadi.green/index.html');
+          launch('https://wadi.green/landing_page/about.html');
         },
       );
 }

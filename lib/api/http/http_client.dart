@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
 
 import '../../core/app_config.dart';
 import '../api_exceptions.dart';
@@ -21,15 +20,6 @@ BaseOptions _requestOptions([String token]) {
 Dio basicClient() => Dio(_requestOptions());
 
 Dio authenticatedClient(String token) => Dio(_requestOptions(token));
-
-Dio cachedClient([String token]) {
-  final dio = Dio(_requestOptions(token));
-  dio.interceptors.add(
-    DioCacheManager(CacheConfig(baseUrl: AppConfig.baseUrl)).interceptor
-        as InterceptorsWrapper,
-  );
-  return dio;
-}
 
 /// This function acts as a gate-keeper.
 /// If the server returns any error, it throws the proper exception and stops

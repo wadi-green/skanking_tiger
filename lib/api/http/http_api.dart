@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
 
 import '../../data/activity/activity.dart';
 import '../../data/activity/planter_activity.dart';
@@ -131,14 +130,11 @@ class HttpApi implements Api {
   Future<SearchResults> searchActivities({String keyword, int limit}) async {
     // Search results are cached for improved user experience
     try {
-      final response = await cachedClient().get(
-        '/public/api/v1/search',
-        queryParameters: {
-          if (keyword != null) 'query': keyword,
-          if (limit != null) 'limit': limit,
-        },
-        options: buildCacheOptions(const Duration(hours: 1)),
-      );
+      final response =
+          await basicClient().get('/public/api/v1/search', queryParameters: {
+        if (keyword != null) 'query': keyword,
+        if (limit != null) 'limit': limit,
+      });
       checkErrors(response);
       return SearchResults.fromJson(response.data as Map<String, dynamic>);
     } on DioError {
@@ -241,10 +237,8 @@ class HttpApi implements Api {
       String planterId, int month, int year, String token) async {
     try {
       final response = await authenticatedClient(token).get(
-        '/secured/api/v1/planters/$planterId/checkins',
-        queryParameters: {'date': '$month/$year'},
-        options: buildCacheOptions(const Duration(minutes: 30)),
-      );
+          '/secured/api/v1/planters/$planterId/checkins',
+          queryParameters: {'date': '$month/$year'});
       checkErrors(response);
       final checkIns = (response.data as List)
           .map((e) => PlanterCheckIn.fromJson(e as Map<String, dynamic>))

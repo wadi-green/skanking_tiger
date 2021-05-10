@@ -62,16 +62,20 @@ class AuthModel extends ChangeNotifier {
   }
 
   Future<void> _restoreSavedData() async {
-    const storage = FlutterSecureStorage();
-    final savedUser = await storage.read(key: LocalKeys.authUser);
-    final savedToken = await storage.read(key: LocalKeys.tokenData);
-    // Do the restoration only if both the token and the user are saved
-    if (savedUser != null && savedToken != null) {
-      user = Planter.fromJson(jsonDecode(savedUser) as Map<String, dynamic>);
-      tokenData = LoginResponse.fromJson(
-        jsonDecode(savedToken) as Map<String, dynamic>,
-      );
-      notifyListeners();
+    try {
+      const storage = FlutterSecureStorage();
+      final savedUser = await storage.read(key: LocalKeys.authUser);
+      final savedToken = await storage.read(key: LocalKeys.tokenData);
+      // Do the restoration only if both the token and the user are saved
+      if (savedUser != null && savedToken != null) {
+        user = Planter.fromJson(jsonDecode(savedUser) as Map<String, dynamic>);
+        tokenData = LoginResponse.fromJson(
+          jsonDecode(savedToken) as Map<String, dynamic>,
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      // do nothing
     }
   }
 }

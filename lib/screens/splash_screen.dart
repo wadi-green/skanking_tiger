@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // In debug, native splash remains for around 2 seconds, but in prod it's
       // less than a second. That's why native splash is not used: it won't even
       // be visible to the user.
-      const Duration(seconds: 2),
+      const Duration(seconds: 1),
       () => Navigator.pushReplacementNamed(
         context,
         context.read<AuthModel>().isLoggedIn

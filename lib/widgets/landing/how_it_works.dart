@@ -110,7 +110,7 @@ class _HowItWorksState extends State<HowItWorks> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () =>
-                          launch('https://www.wadi.green/index.html'),
+                          launch('https://www.wadi.green/landing_page/about.html'),
                       child: const Text(Strings.readMore),
                     ),
                   )

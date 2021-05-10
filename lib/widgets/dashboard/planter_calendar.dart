@@ -32,35 +32,35 @@ class PlanterCalendar extends StatefulWidget {
 
 class _PlanterCalendarState extends State<PlanterCalendar> {
   final listKey = GlobalKey<AnimatedListState>();
-  final _calendarController = CalendarController();
   final List<PlanterCheckIn> _selectedMonthEvents = [];
   final List<PlanterCheckIn> _selectedDayEvents = [];
   Future<List<PlanterCheckIn>> _future;
+  // used to determine which year/month should be currently in view
+  DateTime _focusedDay = DateTime.now();
+  // The actual selected day
+  DateTime _selectedDay;
 
   @override
   void initState() {
     super.initState();
-    _updateEvents(DateTime.now());
+    Future.microtask(() {
+      _updateEvents(_focusedDay);
+    });
   }
 
   void _updateEvents(DateTime date) {
     final tokenData = context.read<AuthModel>().tokenData;
-    _future = context.read<Api>().fetchPlanterCheckIns(
-        widget.planter.id, date.month, date.year, tokenData.accessToken);
+    setState(() {
+      _future = context.read<Api>().fetchPlanterCheckIns(
+          widget.planter.id, date.month, date.year, tokenData.accessToken);
+    });
     _future.then((events) {
       setState(() {
         _selectedMonthEvents
           ..clear()
           ..addAll(events);
-        _calendarController.setSelectedDay(date, runCallback: true);
       });
     });
-  }
-
-  @override
-  void dispose() {
-    _calendarController.dispose();
-    super.dispose();
   }
 
   @override
@@ -69,27 +69,58 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
       title: widget.title,
       padding: innerEdgeInsets,
       children: [
-        _StyledCalendar(
-          controller: _calendarController,
-          events: {
-            for (final event in _selectedMonthEvents) event.date: [event],
+        TableCalendar(
+          firstDay: DateTime(2000),
+          lastDay: DateTime(2100),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+          calendarStyle: const CalendarStyle(
+            cellMargin: EdgeInsets.zero,
+            isTodayHighlighted: false,
+            markersAlignment: Alignment.center,
+            markersMaxCount: 0,
+          ),
+          headerStyle: const HeaderStyle(
+            titleCentered: true,
+            formatButtonVisible: false,
+            leftChevronMargin: EdgeInsets.zero,
+            leftChevronPadding: EdgeInsets.zero,
+            rightChevronMargin: EdgeInsets.zero,
+            rightChevronPadding: EdgeInsets.zero,
+          ),
+          daysOfWeekHeight: 42,
+          rowHeight: 42,
+          daysOfWeekStyle: const DaysOfWeekStyle(weekendStyle: TextStyle()),
+          availableGestures: AvailableGestures.horizontalSwipe,
+          eventLoader: (date) => _selectedDayEvents,
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+            _selectedDay = null;
+            _selectedDayEvents.clear();
+            _updateEvents(focusedDay);
           },
-          onVisibleDaysChanged: (first, last, _) {
-            // Guaranteed to be inside the visible month
-            final day = first.add(const Duration(days: 12));
-            _updateEvents(DateTime(day.year, day.month));
-            // To show the loading state
-            setState(() {});
+          onDaySelected: (selectedDay, focusedDay) {
+            if (!isSameDay(_selectedDay, selectedDay)) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+                _selectedDayEvents
+                  ..clear()
+                  ..addAll(_selectedMonthEvents.where(
+                    (e) => selectedDay.isSameDay(e.date),
+                  ));
+              });
+            }
           },
-          onDaySelected: (day, _, __) {
-            setState(() {
-              _selectedDayEvents
-                ..clear()
-                ..addAll(_selectedMonthEvents.where(
-                  (e) => day.isSameDay(e.date),
-                ));
-            });
-          },
+          calendarBuilders: CalendarBuilders(
+            defaultBuilder: (context, date, focused) {
+              return _selectedMonthEvents.any((e) => e.date.isSameDay(date))
+                  ? dayWithEventBuilder(context, date)
+                  : unselectedDayBuilder(context, date);
+            },
+            outsideBuilder: deactivatedDayBuilder,
+            selectedBuilder: selectedDayBuilder,
+          ),
         ),
         const SizedBox(height: 12),
         FutureBuilder<List<PlanterCheckIn>>(
@@ -103,7 +134,7 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
             }
             if (snapshot.hasData) {
               return ListView.builder(
-                key: ValueKey(_calendarController.selectedDay),
+                key: ValueKey(_selectedDay),
                 physics: const NeverScrollableScrollPhysics(),
                 primary: false,
                 padding: EdgeInsets.zero,
@@ -189,7 +220,7 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
             const SizedBox(height: 12),
             OutlineButton.icon(
               onPressed: () {
-                _updateEvents(_calendarController.selectedDay);
+                _updateEvents(_selectedDay ?? _focusedDay);
                 // To show the loading
                 setState(() {});
               },
@@ -199,76 +230,8 @@ class _PlanterCalendarState extends State<PlanterCalendar> {
           ],
         ),
       );
-}
 
-/// The calendar and all the custom styles it has are extracted into a separate
-/// widget to make it easier to change styling without worrying about breaking
-/// the actual calendar logic
-class _StyledCalendar extends StatelessWidget {
-  final CalendarController controller;
-  final Map<DateTime, List<dynamic>> events;
-  final OnVisibleDaysChanged onVisibleDaysChanged;
-  final OnDaySelected onDaySelected;
-
-  const _StyledCalendar({
-    Key key,
-    @required this.controller,
-    @required this.events,
-    @required this.onVisibleDaysChanged,
-    @required this.onDaySelected,
-  })  : assert(controller != null),
-        assert(events != null),
-        assert(onVisibleDaysChanged != null),
-        assert(onDaySelected != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TableCalendar(
-      calendarController: controller,
-      calendarStyle: const CalendarStyle(
-        contentPadding: EdgeInsets.zero,
-        highlightToday: false,
-        markersAlignment: Alignment.center,
-        markersMaxAmount: 0,
-      ),
-      headerStyle: const HeaderStyle(
-        centerHeaderTitle: true,
-        formatButtonVisible: false,
-        headerPadding: EdgeInsets.only(bottom: 16),
-        leftChevronMargin: EdgeInsets.zero,
-        leftChevronPadding: EdgeInsets.zero,
-        rightChevronMargin: EdgeInsets.zero,
-        rightChevronPadding: EdgeInsets.zero,
-      ),
-      daysOfWeekStyle: const DaysOfWeekStyle(weekendStyle: TextStyle()),
-      availableGestures: AvailableGestures.horizontalSwipe,
-      events: events,
-      builders: CalendarBuilders(
-        dayBuilder: (context, date, events) => events != null
-            ? dayWithEventBuilder(context, date, events)
-            : unselectedDayBuilder(context, date, events),
-        dowWeekdayBuilder: dayTitleBuilder,
-        dowWeekendBuilder: dayTitleBuilder,
-        outsideDayBuilder: deactivatedDayBuilder,
-        outsideWeekendDayBuilder: deactivatedDayBuilder,
-        outsideHolidayDayBuilder: deactivatedDayBuilder,
-        selectedDayBuilder: selectedDayBuilder,
-      ),
-      onVisibleDaysChanged: onVisibleDaysChanged,
-      onDaySelected: onDaySelected,
-    );
-  }
-
-  Widget dayTitleBuilder(BuildContext context, String day) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Center(child: Text(day)),
-    );
-  }
-
-  Widget unselectedDayBuilder(
-      BuildContext context, DateTime date, List events) {
+  Widget unselectedDayBuilder(BuildContext context, DateTime date) {
     return addTopBorder(
       child: Container(
         margin: const EdgeInsets.all(6.0),
@@ -278,7 +241,8 @@ class _StyledCalendar extends StatelessWidget {
     );
   }
 
-  Widget selectedDayBuilder(BuildContext context, DateTime date, List events) {
+  Widget selectedDayBuilder(
+      BuildContext context, DateTime date, DateTime focused) {
     return addTopBorder(
       child: Container(
         decoration: const BoxDecoration(
@@ -292,7 +256,7 @@ class _StyledCalendar extends StatelessWidget {
     );
   }
 
-  Widget dayWithEventBuilder(BuildContext context, DateTime date, List events) {
+  Widget dayWithEventBuilder(BuildContext context, DateTime date) {
     return addTopBorder(
       child: Container(
         key: ValueKey('events_${date.month}_${date.day}'),
@@ -308,7 +272,7 @@ class _StyledCalendar extends StatelessWidget {
   }
 
   Widget deactivatedDayBuilder(
-      BuildContext context, DateTime date, List events) {
+      BuildContext context, DateTime date, DateTime focused) {
     return addTopBorder(
       child: Container(
         margin: const EdgeInsets.all(6.0),
